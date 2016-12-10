@@ -11,9 +11,11 @@ $(document).ready(function() {
    require([
       'state/game',
       'helper/keymap',
+      'network/setup'
    ], function(
       MenuState,
-      KeyMap
+      KeyMap,
+      PeerObject
    ) {
       window.GAME_WIDTH = 694,
       window.GAME_HEIGHT = 694;
