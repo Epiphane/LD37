@@ -9,12 +9,8 @@ requirejs.config({
 
 $(document).ready(function() {
    require([
-      'state/menu',
+      'state/game',
       'helper/keymap',
-      // GLOBAL STUFF SO WE DONT NEED TO REF IT
-      'lib/three',
-      'lib/GPUParticleSystem',
-      'lib/chance.min'
    ], function(
       MenuState,
       KeyMap

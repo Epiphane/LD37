@@ -1,9 +1,9 @@
 define([
    'state/screen_2d',
-   'three_image'
+   'helper/image'
 ], function(
    Screen2D,
-   ThreeImage
+   Image
 ) {
    /* 
     * Menu screen
@@ -12,7 +12,7 @@ define([
       constructor: function(width, height) {
          Screen2D.prototype.constructor.apply(this, arguments);
 
-         var wat = new ThreeImage('index.jpg');
+         var wat = new Image('index.jpg');
 
          var self = this;
          setTimeout(function() {

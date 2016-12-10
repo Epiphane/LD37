@@ -1,7 +1,7 @@
 define([
-    'three_image'
+    'helper/image'
 ], function(
-    ThreeImage
+    Image
 ) {
    /* 
     * 2D screen
