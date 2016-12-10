@@ -1,7 +1,5 @@
 define([
-   'three'
 ], function(
-   THREE
 ) {
    var ThreeImage = function(url) {
       var self = this;
