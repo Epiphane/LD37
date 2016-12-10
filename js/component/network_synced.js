@@ -11,7 +11,7 @@ define([
       },
 
       networkUpdate: function(data) {
-         this.entity.body.SetPosition(new Box2D.b2Vec2(data.position.x, data.position.y));
+         this.entity.body.SetTransform(new Box2D.b2Vec2(data.position.x, data.position.y), this.entity.body.GetAngle());
       },
    });
 });
