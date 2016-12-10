@@ -1,6 +1,6 @@
 define([], function() {
    var Network = (function() {
-      var API_URL = "http://localhost:3000/"
+      var API_URL = "https://elliot-commitment.herokuapp.com/"
 
       var myId = "";
       var myHandle = "";
@@ -19,7 +19,7 @@ define([], function() {
          incoming_connection.on('open', function() {
 
             // ask the server what their name is
-            $.ajax("http://localhost:3000/peer/id/" + incoming_connection.peer, {
+            $.ajax(API_URL + "peer/id/" + incoming_connection.peer, {
                success: function(peerName) {
                   new_connection_established(incoming_connection, peerName);
                },
@@ -41,7 +41,7 @@ define([], function() {
       function getCurrentPlayers(post_result_data) {
          // GET all current friends
          $("#myModal").modal('hide');
-         $.ajax("http://localhost:3000/peer", {
+         $.ajax(API_URL + "peer", {
             success: function(data) {
                serverPeerResult = data;
                data.forEach(function(newFriend) {
@@ -72,7 +72,7 @@ define([], function() {
 
          // POST my new peer id
          $.ajax({
-            url: 'http://localhost:3000/peer/id/' + myId + '/name/' + myHandle,
+            url: API_URL + 'peer/id/' + myId + '/name/' + myHandle,
             error: function(jqXHR, textStatus, errorThrown) {
                // un-unique handle :I
                console.warn("Oh no! Trouble telling the server about my new id " + JSON.stringify(textStatus));
@@ -102,7 +102,7 @@ define([], function() {
          new_connection.on('error', function(err) {
             console.warn("UH OH: My friend " + handle + " broke!!! Let's kill him :(" + JSON.stringify(err));
             $.ajax({
-               url: 'http://localhost:3000/peer/' + new_connection.peer,
+               url: API_URL + 'peer/' + new_connection.peer,
                type: 'DELETE',
                success: function() {
                   delete peers[handle];

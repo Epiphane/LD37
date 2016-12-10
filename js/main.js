@@ -19,15 +19,11 @@ $(document).ready(function() {
       window.GAME_WIDTH = 800,
       window.GAME_HEIGHT = 694;
 
-      // Show name modal, stop user from closing it
+      // Show name modal
       $("#myModal").modal('show');
-      $('#myModal').modal({
-         backdrop: 'static',
-         keyboard: false
-      });
-
       var form = document.getElementById("html-sux");
       form.onsubmit = Network.submitHandleCallback;
+
       // Initialize scene & camera
       var renderer = new THREE.WebGLRenderer();
       renderer.setPixelRatio(window.devicePixelRatio);
