@@ -18,9 +18,8 @@ define([
          var velocity = this.entity.body.GetLinearVelocity();
          var v_x = velocity.get_x();
          var v_y = velocity.get_y();
-         var speed = 15;
-         var rev_speed = 120;
-         var input = false;
+         var speed = 50;
+         var rev_speed = 50;
          if (game.keyDown('LEFT')) {
             if (v_x > 0) {
                this.entity.body.ApplyForce(new Box2D.b2Vec2(-rev_speed, 0), this.entity.body.GetWorldCenter());
@@ -28,7 +27,6 @@ define([
             else {
                this.entity.body.ApplyForce(new Box2D.b2Vec2(-speed, 0), this.entity.body.GetWorldCenter());
             }
-            input = true;
          }
          if (game.keyDown('RIGHT')) {
             if (v_x < 0) {
@@ -37,7 +35,6 @@ define([
             else {
                this.entity.body.ApplyForce(new Box2D.b2Vec2(speed, 0), this.entity.body.GetWorldCenter());
             }
-            input = true;
          }
          if (game.keyDown('UP')) {
             if (v_y > 0) {
@@ -46,7 +43,6 @@ define([
             else {
                this.entity.body.ApplyForce(new Box2D.b2Vec2(0, -speed), this.entity.body.GetWorldCenter());
             }
-            input = true;
          }
          if (game.keyDown('DOWN')) {
             if (v_y < 0) {
@@ -55,15 +51,6 @@ define([
             else {
                this.entity.body.ApplyForce(new Box2D.b2Vec2(0, speed), this.entity.body.GetWorldCenter());
             }
-            input = true;
-         }
-
-         if (!input && (v_x || v_y)) {
-            var damp = Math.max(0, 1 - dt * this.slowdown);
-            var damped_x = velocity.get_x() * damp;
-            var damped_y = velocity.get_y() * damp;
-            // console.log(new Box2D.b2Vec2(damped_x, damped_y));
-            this.entity.body.SetLinearVelocity(new Box2D.b2Vec2(damped_x, damped_y));
          }
       }
    });
