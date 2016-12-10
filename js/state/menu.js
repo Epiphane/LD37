@@ -16,8 +16,8 @@ define([
 
          var self = this;
          setTimeout(function() {
-         self.scene.add(wat);
-      }, 10);
+            self.scene.add(wat);
+         }, 10);
       },
 
       update: function(dt, game) {
