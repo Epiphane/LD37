@@ -29,6 +29,36 @@ define([
          this.tiles = [];
       },
 
+      loadImage: function(canvas, world) {
+         var imageData = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height).data;
+
+         this.tiles = [];
+         for (var y = 0; y < canvas.height; y ++) {
+            var row = [];
+
+            for (var x = 0; x < canvas.width; x ++) {
+               var ndx = 4 * (x + y * canvas.width);
+               var r = imageData[ndx + 0],
+                   g = imageData[ndx + 1],
+                   b = imageData[ndx + 2],
+                   a = imageData[ndx + 3];
+
+               var type = FLOOR;
+
+               // Black = WALL
+               if (r === 0 && g === 0 && b === 0) {
+                  type = WALL;
+               }
+
+               row.push(type);
+            }
+
+            this.tiles.push(row);
+         }
+
+         this.populateTiles(world);
+      },
+
       load: function(layout, world) {
          this.tiles = [];
          layout.forEach(function(row, x_2) {
@@ -59,6 +89,10 @@ define([
             this.tiles.push(row_2);
          }.bind(this));
 
+         this.populateTiles(world);
+      },
+
+      populateTiles: function(world) {
          var tilesize = 2;
          var tileGeometry = new THREE.BoxGeometry(1, 1, 1);
          var wallGeometry = new THREE.BoxGeometry(1, 4, 1);

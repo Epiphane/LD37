@@ -1,7 +1,9 @@
 define([
    'box2d',
+   'entity/box2d_mesh'
 ], function(
-   Box2D
+   Box2D,
+   Box2DMesh
 ) {
    var ready;
 
@@ -20,6 +22,7 @@ define([
    var roombaBodyDef = new Box2D.b2BodyDef();
        roombaBodyDef.set_type(Box2D.b2_dynamicBody);
        roombaBodyDef.set_position(new Box2D.b2Vec2(-2, 2));
+       roombaBodyDef.set_linearDamping(5.0);
    var roombaShape = new Box2D.b2CircleShape();
        roombaShape.set_m_radius(roombaRadius);;
    var roombaFixtureDef = new Box2D.b2FixtureDef();
@@ -27,25 +30,29 @@ define([
        roombaFixtureDef.set_shape(roombaShape);
 
    // DEFINITION
-   var Roomba = Juicy.Mesh.extend({
+   var Roomba = Box2DMesh.extend({
       constructor: function(components, world) {
-         Juicy.Mesh.call(this, roombaGeometry, roombaMaterial, components);
+         Box2DMesh.call(this, components, world);
 
          this.position.y += roombaHeight / 2;
 
-         // Initialize Box2D component
-         this.body = world.CreateBody(roombaBodyDef);
-         this.body.CreateFixture(roombaFixtureDef);
-         this.body.SetLinearDamping(5.0);
-         window.body = this.body;
+         console.log(this.body.GetUserData());
       },
 
-      update: function(dt, game) {
-         var bodyPos = this.body.GetPosition();
-         this.position.set(bodyPos.get_y(), this.position.y, -bodyPos.get_x());
+      beginContact: function(other) {
+         // Let other object define behavior?
+         other.beginContact(this);
+      },
 
-         Juicy.Mesh.prototype.update.apply(this, arguments);
-      }
+      endContact: function(other) {
+         // Let other object define behavior?
+         other.endContact(this);
+      },
+
+      bodyDef: roombaBodyDef,
+      fixtureDef: roombaFixtureDef,
+      material: roombaMaterial,
+      geometry: roombaGeometry
    });
 
    var onReady = [];

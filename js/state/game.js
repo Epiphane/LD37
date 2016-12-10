@@ -4,42 +4,43 @@ define([
    'helper/camera',
    'entity/roomba',
    'entity/map',
+   'entity/powerup',
    'component/roomba_input',
    'network/setup',
-   'component/network_synced'
+   'component/network_synced',
+   'helper/contact_manager'
 ], function(
    Box2D,
-   Image,
+   ThreeImage,
    CameraManager,
    Roomba,
    Map,
+   Powerup,
    RoombaInput,
    Network,
-   NetworkedRoomba
+   NetworkedRoomba,
+   ContactManager
 ) {
    var ready = false;
    var onReady = function() {};
 
-   Roomba.onReady(function() {
-      ready = true;
-      onReady();
-   });
+   // Roomba.onReady(function() {
+   //    ready = true;
+   //    onReady();
+   // });
 
-   var map = [
-      '|-------------------|----|',
-      '|                   |    |',
-      '|                   |  __|',
-      '|                        |',
-      '|                        |',
-      '|                        |',
-      '|                        |',
-      '|                        |',
-      '|                        |',
-      '|                        |',
-      '|                        |',
-      '|                        |',
-      '==========================',
-   ];
+   var mapImage = new Image();
+       mapImage.src = './textures/room.png';
+   var mapCanvas = document.createElement('canvas');
+       window.m = mapCanvas;
+       mapImage.onload = function() {
+         mapCanvas.width = mapImage.width;
+         mapCanvas.height = mapImage.height;
+         mapCanvas.getContext('2d').drawImage(mapImage, 0, 0);
+
+         ready = true;
+         onReady(mapCanvas);
+       };
 
    return Juicy.State.extend({
       constructor: function(width, height) {
@@ -48,7 +49,6 @@ define([
          Juicy.State.apply(this, arguments);
 
          this.ready = ready;
-         onReady = function() { this.ready = true; }.bind(this);
 
          this.perspective(38);
          this.lookAt(new THREE.Vector3(0, 5, 0), new THREE.Vector3(0, 0, 0));
@@ -59,19 +59,27 @@ define([
          // Box2D?
          this.world = new Box2D.b2World(new Box2D.b2Vec2(0.0, 0.0));
          this.world.SetAllowSleeping(false);
+         this.world.SetContactListener(ContactManager);
+
+         ContactManager.setBeginContactCallback(this.beginContact.bind(this));
+         ContactManager.setEndContactCallback(this.endContact.bind(this));
 
          // Room
          this.room = new Map();
-         this.room.load(map, this.world);
          this.scene.add(this.room);
+         onReady = function(mapCanvas) { 
+            this.ready = true; 
+
+            this.room.loadImage(mapCanvas, this.world);
+         }.bind(this);
 
          // Roomba 1
          this.roomba = new Roomba([RoombaInput], this.world);
-
-         this.cameraMan.follow(this.roomba, new THREE.Vector3(5, 15, 0));
-         this.angle = Math.PI / 2;
-
          this.scene.add(this.roomba);
+
+         // Camera magic
+         this.cameraMan.follow(this.roomba, new THREE.Vector3(0, 15, 0));
+         this.angle = Math.PI / 2;
 
          var that = this;
          this.networkedRoombas = [];
@@ -84,31 +92,18 @@ define([
             return networkedRoomba.getComponent('NetworkedRoomba');
          });
          this.roomba.body.ApplyLinearImpulse(new Box2D.b2Vec2(-0.01, -0.01), this.roomba.body.GetPosition());
+      
+         // Populate room with one powerup
+         this.powerup = new Powerup(this.world);
+         this.scene.add(this.powerup);
       },
 
-      getCameraDirection: function(x, y, z) {
-         var pLocal = new THREE.Vector3(x, y, z);
-
-         var pWorld = pLocal.applyMatrix4( this.camera.matrixWorld );
-             pWorld.y = this.camera.position.y;
-
-         return pWorld.sub(this.camera.position).normalize();
+      beginContact: function(contact, idA, idB) {
+         this.scene.getObjectById(idA).beginContact(this.scene.getObjectById(idB));
       },
 
-      getCameraFront: function() {
-         return this.getCameraDirection(0, 0, -1);
-      },
-
-      getCameraBack: function() {
-         return this.getCameraDirection(0, 0, 1);
-      },
-
-      getCameraRight: function() {
-         return this.getCameraDirection(1, 0, 0);
-      },
-
-      getCameraLeft: function() {
-         return this.getCameraDirection(-1, 0, 0);
+      endContact: function(contact, idA, idB) {
+         this.scene.getObjectById(idA).endContact(this.scene.getObjectById(idB));
       },
 
       update: function(dt, game) {
@@ -117,10 +112,8 @@ define([
 
          this.cameraMan.update(dt);
 
-         this.roomba.update(dt, game);
-
-         this.networkedRoombas.forEach(function(roomba) {
-            roomba.update(dt, game);
+         this.scene.children.forEach(function(child) {
+            child.update(dt, game);
          });
 
          this.broadcastTick--
