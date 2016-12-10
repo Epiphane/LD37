@@ -16,7 +16,7 @@ $(document).ready(function() {
       KeyMap,
       Network
    ) {
-      window.GAME_WIDTH = 694,
+      window.GAME_WIDTH = 800,
       window.GAME_HEIGHT = 694;
 
       // Show name modal, stop user from closing it
