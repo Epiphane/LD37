@@ -53,6 +53,7 @@ define([
       // Helper function to make an AJAX call and connect to existing players
       function getCurrentPlayers(post_result_data) {
          // GET all current friends
+         myHandle = post_result_data;
          jQuery("#myModal").modal('hide');
          jQuery.ajax(API_URL + "peer", {
             success: function(data) {
@@ -113,7 +114,7 @@ define([
          console.log(handle.toUpperCase() + " HAS ENTERED THE BATTLE");
 
          // Create a new network-synced roomba
-         networkSyncedEntities[handle] = newRoombaCallback(handle);
+         networkSyncedEntities[handle.toLowerCase()] = newRoombaCallback(handle);
 
          new_connection.on('error', function(err) {
             console.warn("UH OH: My friend " + handle + " broke!!! Let's kill him :(" + JSON.stringify(err));
@@ -130,7 +131,7 @@ define([
          });
 
          new_connection.on('data', function(data) {
-            networkSyncedEntities[data.name].networkUpdate(data);
+            networkSyncedEntities[data.name.toLowerCase()].networkUpdate(data);
          });
       }
 

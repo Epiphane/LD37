@@ -31,7 +31,7 @@ define([
    // DEFINITION
    var Roomba = Juicy.Mesh.extend({
       constructor: function(components, world) {
-         components.unshift(Momentum);
+         // components.unshift(Momentum);
 
          Juicy.Mesh.call(this, roombaGeometry, roombaMaterial, components);
 

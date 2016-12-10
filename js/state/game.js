@@ -5,6 +5,7 @@ define([
    'entity/roomba',
    'entity/map',
    'component/roomba_input',
+   'component/momentum',
    'network/setup',
    'component/network_synced'
 ], function(
@@ -14,6 +15,7 @@ define([
    Roomba,
    Map,
    RoombaInput,
+   Momentum,
    Network,
    NetworkedRoomba
 ) {
@@ -66,7 +68,7 @@ define([
          this.scene.add(this.room);
 
          // Roomba 1
-         this.roomba = new Roomba([RoombaInput], this.world);
+         this.roomba = new Roomba([Momentum, RoombaInput], this.world);
 
          this.cameraMan.follow(this.roomba, new THREE.Vector3(5, 15, 0));
          this.angle = Math.PI / 2;
