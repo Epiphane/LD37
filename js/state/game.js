@@ -74,10 +74,13 @@ define([
          this.scene.add(this.roomba);
 
          var that = this;
+         this.networkedRoombas = [];
+         this.broadcastTick = 3;
          Network.newRoombaCallback(function(handle) {
             var networkedRoomba = new Roomba([NetworkedRoomba], that.world);
             // later, maybe add a label with the roomba's name to the game world..?
             that.scene.add(networkedRoomba);
+            that.networkedRoombas.push(networkedRoomba);
             return networkedRoomba.getComponent('NetworkedRoomba');
          });
          this.roomba.body.ApplyLinearImpulse(new Box2D.b2Vec2(-0.01, -0.01), this.roomba.body.GetPosition());
@@ -116,8 +119,16 @@ define([
 
          this.roomba.update(dt, game);
 
-         var posn = this.roomba.body.GetPosition();
-         Network.broadcastRoombaState({x: posn.get_x(), y: posn.get_y()});
+         this.networkedRoombas.forEach(function(roomba) {
+            roomba.update(dt, game);
+         });
+
+         this.broadcastTick--
+         if (this.broadcastTick === 0) {
+            this.broadcastTick = 2;
+            var posn = this.roomba.body.GetPosition();
+            Network.broadcastRoombaState({x: posn.get_x(), y: posn.get_y()});
+         }
       }
    });
 });
