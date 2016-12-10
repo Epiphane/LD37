@@ -83,14 +83,14 @@ define([
          
 
          var tilesize = 2;
-         map.forEach(function(row, x_2)) {
-            for (var z = 0; z < row.length; z ++) {
-               var tile = new THREE.Mesh(new THREE.BoxGeometry(1, 0.5, 1), material);
-                   tile.position.x = x;
-                   tile.position.z = z;
-                   tile.position.y = -0.25;
-               this.scene.add(tile);
-            }  
+         map.forEach(function(row, x_2) {
+            // for (var z = 0; z < row.length; z ++) {
+            //    var tile = new THREE.Mesh(new THREE.BoxGeometry(1, 0.5, 1), material);
+            //        tile.position.x = x;
+            //        tile.position.z = z;
+            //        tile.position.y = -0.25;
+            //    this.scene.add(tile);
+            // }  
          })
       },
 
