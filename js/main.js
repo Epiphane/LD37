@@ -2,7 +2,8 @@ requirejs.config({
    baseUrl: 'js',
    paths: {
       lib: '../lib',
-      juicy: '../lib/juicy.three'
+      juicy: '../lib/juicy.three',
+      box2d: '../lib/box2d'
    }
 });
 
@@ -20,7 +21,7 @@ $(document).ready(function() {
       window.GAME_HEIGHT = 694;
 
       // Show name modal
-      $("#myModal").modal('show');
+      // $("#myModal").modal('show');
       var form = document.getElementById("html-sux");
       form.onsubmit = Network.submitHandleCallback;
 
@@ -28,7 +29,7 @@ $(document).ready(function() {
       var renderer = new THREE.WebGLRenderer();
       renderer.setPixelRatio(window.devicePixelRatio);
       renderer.setSize(GAME_WIDTH, GAME_HEIGHT);
-      $('#game').append(renderer.domElement);
+      jQuery('#game').append(renderer.domElement);
 
       Juicy.Game.init(renderer, GAME_WIDTH, GAME_HEIGHT, KeyMap);
 

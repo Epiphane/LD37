@@ -1,9 +1,17 @@
 define([
-    'helper/image',
-    'entity/roomba'
+   'box2d',
+   'helper/image',
+   'helper/camera',
+   'entity/roomba',
+   'entity/map',
+   'component/roomba_input'
 ], function(
-    Image,
-    Roomba
+   Box2D,
+   Image,
+   CameraManager,
+   Roomba,
+   Map,
+   RoombaInput
 ) {
    var ready = false;
    var onReady = function() {};
@@ -13,14 +21,10 @@ define([
       onReady();
    });
 
-   // Load texture
-   var texture = new THREE.TextureLoader().load('textures/square-outline-textured.png');
-   var material = new THREE.MeshBasicMaterial({ color: 0xffffff, map: texture });
-
    var map = [
-      'T------------------------7',
-      '|                        |',
-      '|                        |',
+      '|-------------------|--   ',
+      '|                   |     ',
+      '|                   |  __|',
       '|                        |',
       '|                        |',
       '|                        |',
@@ -31,10 +35,12 @@ define([
       '|                        |',
       '|                        |',
       '==========================',
-   ]
+   ];
 
    return Juicy.State.extend({
       constructor: function(width, height) {
+         window.game = this;
+
          Juicy.State.apply(this, arguments);
 
          this.ready = ready;
@@ -43,46 +49,24 @@ define([
          this.perspective(38);
          this.lookAt(new THREE.Vector3(0, 5, 0), new THREE.Vector3(0, 0, 0));
 
-         // Roomba 1
-         this.roomba = new Roomba();
+         // Camera Manager
+         this.cameraMan = new CameraManager(this.camera);
 
-         this.cameraDirection = new THREE.Vector3(1, 0, 0);
-         this.cameraRight = new THREE.Vector3(0, 0, 1);
+         // Box2D?
+         this.world = new Box2D.b2World(new Box2D.b2Vec2(0.0, 0.0));
+
+         // Room
+         this.room = new Map();
+         this.room.load(map, this.world);
+         this.scene.add(this.room);
+
+         // Roomba 1
+         this.roomba = new Roomba([RoombaInput], this.world);
+
+         this.cameraMan.follow(this.roomba, new THREE.Vector3(5, 15, 0));
          this.angle = Math.PI / 2;
 
          this.scene.add(this.roomba);
-
-         var wallLength = 10;
-         var wallHeight = 2;
-         var wall = new THREE.Mesh(new THREE.BoxGeometry(1, wallHeight, wallLength), material);
-             wall.position.x = -3;
-             wall.position.y += wallHeight / 2;
-         this.scene.add(wall);
-
-         wall = new THREE.Mesh(new THREE.BoxGeometry(1, wallHeight, wallLength), material);
-         wall.position.x = 7;
-         wall.position.y += wallHeight / 2;
-         this.scene.add(wall);
-
-         wall = new THREE.Mesh(new THREE.BoxGeometry(wallLength, wallHeight, 1), material);
-         wall.position.z = 7;
-         wall.position.y += wallHeight / 2;
-         this.scene.add(wall);
-
-         window.game = this;
-
-         
-
-         var tilesize = 2;
-         map.forEach(function(row, x_2) {
-            // for (var z = 0; z < row.length; z ++) {
-            //    var tile = new THREE.Mesh(new THREE.BoxGeometry(1, 0.5, 1), material);
-            //        tile.position.x = x;
-            //        tile.position.z = z;
-            //        tile.position.y = -0.25;
-            //    this.scene.add(tile);
-            // }  
-         })
       },
 
       getCameraDirection: function(x, y, z) {
@@ -111,25 +95,11 @@ define([
       },
 
       update: function(dt, game) {
-         var speed = 25;
-         if (game.keyDown('LEFT')) {
-            this.roomba.applyForce(this.cameraRight.clone().multiplyScalar(speed * dt));
-         }
-         if (game.keyDown('RIGHT')) {
-            this.roomba.applyForce(this.cameraRight.clone().multiplyScalar(-speed * dt));
-         }
-         if (game.keyDown('UP')) {
-            this.roomba.applyForce(this.cameraDirection.clone().multiplyScalar(-speed * dt));
-         }
-         if (game.keyDown('DOWN')) {
-            this.roomba.applyForce(this.cameraDirection.clone().multiplyScalar(speed * dt));
-         }
+         // Using 1/60 instead of dt because fixed-time calculations are more accurate
+         // this.roomba.body.ApplyLinearImpulse(Box2D.b2Vec2(-10.0, -10.0), this.roomba.body.GetPosition());
+         this.world.Step(1/60, 3, 2);
 
-         this.lookAt(
-            this.roomba.position.clone()
-               // .add(this.cameraDirection)
-               .add(new THREE.Vector3(0, 15, 0)),
-            this.roomba.position);
+         this.cameraMan.update(dt);
 
          this.roomba.update(dt, game);
       }
