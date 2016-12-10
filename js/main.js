@@ -12,7 +12,6 @@ $(document).ready(function() {
       'state/menu',
       'helper/keymap',
       // GLOBAL STUFF SO WE DONT NEED TO REF IT
-      'lib/juicy.three',
       'lib/three',
       'lib/GPUParticleSystem',
       'lib/chance.min'
@@ -31,13 +30,13 @@ $(document).ready(function() {
 
       Juicy.Game.init(renderer, GAME_WIDTH, GAME_HEIGHT, KeyMap);
 
-      if (location.href.indexOf('localhost') >= 0) {
-         var fpsOutput = document.createElement('div');
-         fpsOutput.id = 'debug';
+      // if (location.href.indexOf('localhost') >= 0) {
+      //    var fpsOutput = document.createElement('div');
+      //    fpsOutput.id = 'debug';
 
-         Juicy.Game.setDebug(fpsOutput);
-         document.body.appendChild(fpsOutput);
-      }
+      //    Juicy.Game.setDebug(fpsOutput);
+      //    document.body.appendChild(fpsOutput);
+      // }
 
       // Load sounds
       // Juicy.Sound.load('select', './audio/select2.mp3', false);
@@ -53,11 +52,7 @@ $(document).ready(function() {
       // Juicy.Sound.load('levelup', './audio/Coin01.mp3', false);
 
       // Juicy.Game.setState(new EndGameScore(GAME_WIDTH, GAME_HEIGHT, 'classic2', 262, {}, {"seed": 0})).run();
-      Juicy.Game.setState(new Menu(GAME_WIDTH, GAME_HEIGHT, 'classic', 250, {}, {"seed": 0})).run();
-
-      $('#report-bug').click(function() {
-         Juicy.Game.setState(new ReportBug(GAME_WIDTH, GAME_HEIGHT, Juicy.Game.getState()));
-      });
+      Juicy.Game.setState(new MenuState(GAME_WIDTH, GAME_HEIGHT, 'classic', 250, {}, {"seed": 0})).run();
 
       return renderer.domElement;
    });

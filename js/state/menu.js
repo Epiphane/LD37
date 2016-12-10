@@ -10,9 +10,14 @@ define([
     */
    return Screen2D.extend({
       constructor: function(width, height) {
-         var wat = new ThreeImage('wat.jpg');
+         Screen2D.prototype.constructor.apply(this, arguments);
 
-         this.scene.add(wat);
+         var wat = new ThreeImage('index.jpg');
+
+         var self = this;
+         setTimeout(function() {
+         self.scene.add(wat);
+      }, 10);
       },
 
       update: function(dt, game) {

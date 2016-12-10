@@ -1,6 +1,8 @@
 define([
-   'juicy'
-], function(Juicy) {
+    'three_image'
+], function(
+    ThreeImage
+) {
    /* 
     * 2D screen
     */
@@ -38,14 +40,6 @@ define([
          this.camera.position.y = 0;
          this.camera.position.z = 20;
          this.camera.lookAt(new THREE.Vector3(0, 0, 0));
-         // this.camera.position.z = 250;
-         // this.camera.lookAt(new THREE.Vector3(0, 0, 0));
-
-         // this.backdrop = SpecialCube.Group.FromImage('./textures/backdrop.png');
-         // this.scene.add(this.backdrop);
-         this.backdrop = new ThreeImage('backdrop_rendered.png');
-         this.backdrop.position.set(0, 0, -10);
-         this.scene.add(this.backdrop);
       },
 
       update: function(dt, game) {
