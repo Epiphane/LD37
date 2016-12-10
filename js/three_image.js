@@ -1,4 +1,8 @@
-var ThreeImage = (function() {
+define([
+   'three'
+], function(
+   THREE
+) {
    var ThreeImage = function(url) {
       var self = this;
 
@@ -126,4 +130,4 @@ var ThreeImage = (function() {
    };
 
    return ThreeImage;
-})();
+});
