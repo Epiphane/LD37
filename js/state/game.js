@@ -1,18 +1,20 @@
 define([
     'helper/image',
-    'component/momentum'
+    'entity/roomba'
 ], function(
     Image,
-    Momentum
+    Roomba
 ) {
    var ready = false;
    var onReady = function() {};
 
-   // Load texture
-   var texture = new THREE.TextureLoader().load('textures/square-outline-textured.png', function() {
+   Roomba.onReady(function() {
       ready = true;
       onReady();
    });
+
+   // Load texture
+   var texture = new THREE.TextureLoader().load('textures/square-outline-textured.png');
    var material = new THREE.MeshBasicMaterial({ color: 0xffffff, map: texture });
 
    var map = [
@@ -42,18 +44,7 @@ define([
          this.lookAt(new THREE.Vector3(0, 5, 0), new THREE.Vector3(0, 0, 0));
 
          // Roomba 1
-         this.roombaRadius = 0.3;
-         this.roombaHeight = 0.5;
-         this.roombaGeometry = new THREE.CylinderGeometry(
-            this.roombaRadius, 
-            this.roombaRadius, 
-            this.roombaHeight, 
-            32);
-         this.roombaMaterial = new THREE.MeshBasicMaterial({map: texture, color: 0x66ccff});
-         this.roomba = new Juicy.Mesh(this.roombaGeometry,
-                                      this.roombaMaterial,
-                                      ['Momentum']);
-         this.roomba.position.y += this.roombaHeight / 2;
+         this.roomba = new Roomba();
 
          this.cameraDirection = new THREE.Vector3(1, 0, 0);
          this.cameraRight = new THREE.Vector3(0, 0, 1);
