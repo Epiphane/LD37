@@ -2,7 +2,6 @@ requirejs.config({
    baseUrl: 'js',
    paths: {
       lib: '../lib',
-      three: '../lib/three',
       juicy: '../lib/juicy.three'
    }
 });

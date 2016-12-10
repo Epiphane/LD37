@@ -10,12 +10,9 @@ define([
       constructor: function(width, height) {
          Juicy.State.apply(this, arguments);
 
-         var wat = new Image('index.jpg');
+         var wat = new Juicy.Sprite('index.jpg');
 
-         var self = this;
-         setTimeout(function() {
-            self.scene.add(wat);
-         }, 10);
+         this.scene.add(wat);
 
          this.orthographic(2);
       }
