@@ -11,6 +11,7 @@ define([
 
          this.cameraDirection = new THREE.Vector3(1, 0, 0);
          this.cameraRight = new THREE.Vector3(0, 0, 1);
+         this.slowdown = 4;
       },
 
       update: function(dt, game) {
@@ -57,13 +58,13 @@ define([
             input = true;
          }
 
-         // if (input && !input) {
-         //    var damp = Math.max(0, 1 - dt * this.slowdown);
-         //    var damped_x = velocity.get_x() * damp;
-         //    var damped_y = velocity.get_y() * damp;
-         //    // console.log(new Box2D.b2Vec2(damped_x, damped_y));
-         //    this.entity.body.SetLinearVelocity(new Box2D.b2Vec2(damped_x, damped_y));
-         // }
+         if (!input && (v_x || v_y)) {
+            var damp = Math.max(0, 1 - dt * this.slowdown);
+            var damped_x = velocity.get_x() * damp;
+            var damped_y = velocity.get_y() * damp;
+            // console.log(new Box2D.b2Vec2(damped_x, damped_y));
+            this.entity.body.SetLinearVelocity(new Box2D.b2Vec2(damped_x, damped_y));
+         }
       }
    });
 });
