@@ -1,14 +1,26 @@
 define([
-   // 'component/momentum'
+   'box2d',
 ], function(
-   // Momentum
+   Box2D
 ) {
+   // TWEAK THESE
+   var wallRadius = 0.5;
+
    // Load texture
    var texture = new THREE.TextureLoader().load('textures/square-outline-textured.png');
    var material = new THREE.MeshBasicMaterial({ color: 0xffffff, map: texture });
 
    var FLOOR = 0,
        WALL  = 1;
+
+   // BOX2D
+   var wallBodyDef = new Box2D.b2BodyDef();
+       wallBodyDef.set_type(Box2D.b2_kinematicBody);
+   var wallShape = new Box2D.b2PolygonShape();
+       wallShape.SetAsBox(wallRadius, wallRadius);
+   var wallFixtureDef = new Box2D.b2FixtureDef();
+       wallFixtureDef.set_density(0.0);
+       wallFixtureDef.set_shape(wallShape);
 
    var Map = Juicy.Entity.extend({
       constructor: function() {
@@ -17,7 +29,7 @@ define([
          this.tiles = [];
       },
 
-      load: function(layout) {
+      load: function(layout, world) {
          this.tiles = [];
          layout.forEach(function(row, x_2) {
             var row_1 = [];
@@ -63,6 +75,10 @@ define([
                   case WALL:
                      var tileObj = new THREE.Mesh(wallGeometry, material);
                          tileObj.position.y = 2;
+
+                     wallBodyDef.set_position(new Box2D.b2Vec2(-z, x));
+                     var wall = world.CreateBody(wallBodyDef);
+                         wall.CreateFixture(wallFixtureDef);
                      break;
                }
    

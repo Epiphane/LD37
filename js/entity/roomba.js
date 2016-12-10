@@ -1,9 +1,7 @@
 define([
    'box2d',
-   'component/momentum',
 ], function(
-   Box2D,
-   Momentum
+   Box2D
 ) {
    var ready;
 
@@ -22,8 +20,8 @@ define([
    var roombaBodyDef = new Box2D.b2BodyDef();
        roombaBodyDef.set_type(Box2D.b2_dynamicBody);
        roombaBodyDef.set_position(new Box2D.b2Vec2(-2, 2));
-   var roombaShape = new Box2D.b2PolygonShape();
-       roombaShape.SetAsBox(1, 1);
+   var roombaShape = new Box2D.b2CircleShape();
+       roombaShape.set_m_radius(roombaRadius);;
    var roombaFixtureDef = new Box2D.b2FixtureDef();
        roombaFixtureDef.set_density(0.0);
        roombaFixtureDef.set_shape(roombaShape);
@@ -31,8 +29,6 @@ define([
    // DEFINITION
    var Roomba = Juicy.Mesh.extend({
       constructor: function(components, world) {
-         // components.unshift(Momentum);
-
          Juicy.Mesh.call(this, roombaGeometry, roombaMaterial, components);
 
          this.position.y += roombaHeight / 2;
@@ -40,6 +36,7 @@ define([
          // Initialize Box2D component
          this.body = world.CreateBody(roombaBodyDef);
          this.body.CreateFixture(roombaFixtureDef);
+         this.body.SetLinearDamping(5.0);
          window.body = this.body;
       },
 
