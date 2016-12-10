@@ -33,13 +33,13 @@ define(['box2d'], function(Box2D) {
          if (game.keyDown('DOWN') || game.keyDown('UP') || game.keyDown('LEFT') || game.keyDown('RIGHT'))
             return;
 
-         var velocity = this.entity.body.GetLinearVelocity();
-         if (velocity.get_x() || velocity.get_y()) {
-            var damp = Math.max(0, 1 - dt * this.slowdown);
-            var damped_x = velocity.get_x() * damp;
-            var damped_y = velocity.get_y() * damp;
-            this.entity.body.SetLinearVelocity(new Box2D.b2Vec2(damped_x, damped_y));
-         }
+         // var velocity = this.entity.body.GetLinearVelocity();
+         // if (velocity.get_x() || velocity.get_y()) {
+         //    var damp = Math.max(0, 1 - dt * this.slowdown);
+         //    var damped_x = velocity.get_x() * damp;
+         //    var damped_y = velocity.get_y() * damp;
+         //    this.entity.body.SetLinearVelocity(new Box2D.b2Vec2(damped_x, damped_y));
+         // }
       }
    });
 });
