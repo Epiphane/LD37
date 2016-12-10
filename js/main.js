@@ -21,7 +21,7 @@ $(document).ready(function() {
       window.GAME_HEIGHT = 694;
 
       // Show name modal
-      // $("#myModal").modal('show');
+      jQuery("#myModal").modal('show');
       var form = document.getElementById("html-sux");
       form.onsubmit = Network.submitHandleCallback;
 

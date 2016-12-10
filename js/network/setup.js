@@ -1,4 +1,8 @@
-define([], function() {
+define([
+   'entity/roomba',
+], function(
+   Roomba
+) {
    var Network = (function() {
       var API_URL = "https://elliot-commitment.herokuapp.com/"
 
@@ -6,6 +10,14 @@ define([], function() {
       var myHandle = "";
 
       var peerAPI = new Peer({key: 'is1zfbruud31sjor'});
+
+      var newRoombaCallback = null;
+
+      // Keeps track of the stuff that syncs across the network.
+      // For roombas, the key is the user's handle and the value is
+      // the NetworkSync component. If we add powerups and stuff later it'll
+      // work slightly differently.
+      var networkSyncedEntities = {};
 
       // Just connected to remote peer server
       peerAPI.on('open', function(id) {
@@ -19,7 +31,7 @@ define([], function() {
          incoming_connection.on('open', function() {
 
             // ask the server what their name is
-            $.ajax(API_URL + "peer/id/" + incoming_connection.peer, {
+            jQuery.ajax(API_URL + "peer/id/" + incoming_connection.peer, {
                success: function(peerName) {
                   new_connection_established(incoming_connection, peerName);
                },
@@ -40,8 +52,8 @@ define([], function() {
       // Helper function to make an AJAX call and connect to existing players
       function getCurrentPlayers(post_result_data) {
          // GET all current friends
-         $("#myModal").modal('hide');
-         $.ajax(API_URL + "peer", {
+         jQuery("#myModal").modal('hide');
+         jQuery.ajax(API_URL + "peer", {
             success: function(data) {
                serverPeerResult = data;
                data.forEach(function(newFriend) {
@@ -61,7 +73,7 @@ define([], function() {
       function submitHandle(evt) {
          evt.preventDefault();
 
-         myHandle = $('form').serializeArray()[0]["value"];
+         myHandle = jQuery('form').serializeArray()[0]["value"];
 
          if (myId === "") {
             // I made a race condition. If the peerJS server doesn't respond in
@@ -71,15 +83,15 @@ define([], function() {
          }
 
          // POST my new peer id
-         $.ajax({
+         jQuery.ajax({
             url: API_URL + 'peer/id/' + myId + '/name/' + myHandle,
             error: function(jqXHR, textStatus, errorThrown) {
                // un-unique handle :I
                console.warn("Oh no! Trouble telling the server about my new id " + JSON.stringify(textStatus));
-               $("#be-more-clever").show(0);
-               var fontSize = parseInt($("#be-more-clever").css("font-size"));
+               jQuery("#be-more-clever").show(0);
+               var fontSize = parseInt(jQuery("#be-more-clever").css("font-size"));
                fontSize = fontSize + 1 + "px";
-               $("#be-more-clever").css({'font-size':fontSize});
+               jQuery("#be-more-clever").css({'font-size':fontSize});
             },
             type: 'POST',
             success: getCurrentPlayers
@@ -99,19 +111,25 @@ define([], function() {
 
          console.log(handle.toUpperCase() + " HAS ENTERED THE BATTLE");
 
+         // Create a new network-synced roomba
+         networkSyncedEntities[handle] = newRoombaCallback(handle);
+
          new_connection.on('error', function(err) {
             console.warn("UH OH: My friend " + handle + " broke!!! Let's kill him :(" + JSON.stringify(err));
-            $.ajax({
+            jQuery.ajax({
                url: API_URL + 'peer/' + new_connection.peer,
                type: 'DELETE',
                success: function() {
+                  delete peers[handle];
+               },
+               error: function() {
                   delete peers[handle];
                }
             })
          });
 
          new_connection.on('data', function(data) {
-            console.log(handle + " says " + JSON.stringify(data));
+            networkSyncedEntities[data.name].networkUpdate(data);
          });
       }
 
@@ -126,19 +144,22 @@ define([], function() {
          return text;
       }
 
-      // Heartbeat TODO: send your current game state here.
-      var i = 0;
-      setInterval(function() {
+      function broadcastRoombaState(position) {
          for (var handle in peers) {
             peers[handle].send({
-               type: "MESSAGE",
-               payload: "hi friend! " + i++
+               type: "UPDATE_OBJECT",
+               name: myHandle,
+               position: position
             });
          }
-      }, 100);
+      }
 
       return {
-         submitHandleCallback: submitHandle
+         submitHandleCallback: submitHandle,
+         broadcastRoombaState: broadcastRoombaState,
+         newRoombaCallback: function(callback) {
+            newRoombaCallback = callback;
+         }
       }
    })();
 

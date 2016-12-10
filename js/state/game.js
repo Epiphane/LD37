@@ -4,14 +4,18 @@ define([
    'helper/camera',
    'entity/roomba',
    'entity/map',
-   'component/roomba_input'
+   'component/roomba_input',
+   'network/setup',
+   'component/network_synced'
 ], function(
    Box2D,
    Image,
    CameraManager,
    Roomba,
    Map,
-   RoombaInput
+   RoombaInput,
+   Network,
+   NetworkedRoomba
 ) {
    var ready = false;
    var onReady = function() {};
@@ -67,6 +71,14 @@ define([
          this.angle = Math.PI / 2;
 
          this.scene.add(this.roomba);
+
+         var that = this;
+         Network.newRoombaCallback(function(handle) {
+            var networkedRoomba = new Roomba([NetworkedRoomba], that.world);
+            // later, maybe add a label with the roomba's name to the game world..?
+            that.scene.add(networkedRoomba);
+            return networkedRoomba.getComponent('NetworkedRoomba');
+         });
       },
 
       getCameraDirection: function(x, y, z) {
@@ -102,6 +114,9 @@ define([
          this.cameraMan.update(dt);
 
          this.roomba.update(dt, game);
+
+         var posn = this.roomba.body.GetPosition();
+         Network.broadcastRoombaState({x: posn.get_x(), y: posn.get_y()});
       }
    });
 });
