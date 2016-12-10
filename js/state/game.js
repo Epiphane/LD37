@@ -58,6 +58,7 @@ define([
 
          // Box2D?
          this.world = new Box2D.b2World(new Box2D.b2Vec2(0.0, 0.0));
+         this.world.SetAllowSleeping(false);
 
          // Room
          this.room = new Map();
@@ -72,13 +73,14 @@ define([
 
          this.scene.add(this.roomba);
 
-         var that = this;
-         Network.newRoombaCallback(function(handle) {
-            var networkedRoomba = new Roomba([NetworkedRoomba], that.world);
-            // later, maybe add a label with the roomba's name to the game world..?
-            that.scene.add(networkedRoomba);
-            return networkedRoomba.getComponent('NetworkedRoomba');
-         });
+         // var that = this;
+         // Network.newRoombaCallback(function(handle) {
+         //    var networkedRoomba = new Roomba([NetworkedRoomba], that.world);
+         //    // later, maybe add a label with the roomba's name to the game world..?
+         //    that.scene.add(networkedRoomba);
+         //    return networkedRoomba.getComponent('NetworkedRoomba');
+         // });
+         this.roomba.body.ApplyLinearImpulse(new Box2D.b2Vec2(-0.01, -0.01), this.roomba.body.GetPosition());
       },
 
       getCameraDirection: function(x, y, z) {
@@ -108,7 +110,6 @@ define([
 
       update: function(dt, game) {
          // Using 1/60 instead of dt because fixed-time calculations are more accurate
-         // this.roomba.body.ApplyLinearImpulse(Box2D.b2Vec2(-10.0, -10.0), this.roomba.body.GetPosition());
          this.world.Step(1/60, 3, 2);
 
          this.cameraMan.update(dt);

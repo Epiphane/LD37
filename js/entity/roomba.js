@@ -21,6 +21,7 @@ define([
    // BOX2D
    var roombaBodyDef = new Box2D.b2BodyDef();
        roombaBodyDef.set_type(Box2D.b2_dynamicBody);
+       roombaBodyDef.set_position(new Box2D.b2Vec2(-2, 2));
    var roombaShape = new Box2D.b2PolygonShape();
        roombaShape.SetAsBox(1, 1);
    var roombaFixtureDef = new Box2D.b2FixtureDef();
