@@ -1,7 +1,9 @@
 define([
-    'helper/image'
+    'helper/image',
+    'component/momentum'
 ], function(
-    Image
+    Image,
+    Momentum
 ) {
    var ready = false;
    var onReady = function() {};
@@ -13,6 +15,22 @@ define([
    });
    var material = new THREE.MeshBasicMaterial({ color: 0xffffff, map: texture });
 
+   var map = [
+      'T------------------------7',
+      '|                        |',
+      '|                        |',
+      '|                        |',
+      '|                        |',
+      '|                        |',
+      '|                        |',
+      '|                        |',
+      '|                        |',
+      '|                        |',
+      '|                        |',
+      '|                        |',
+      '==========================',
+   ]
+
    return Juicy.State.extend({
       constructor: function(width, height) {
          Juicy.State.apply(this, arguments);
@@ -20,11 +38,11 @@ define([
          this.ready = ready;
          onReady = function() { this.ready = true; }.bind(this);
 
-         this.perspective();
-         this.lookAt(new THREE.Vector3(0, 15, 0), new THREE.Vector3(0, 0, 0));
+         this.perspective(38);
+         this.lookAt(new THREE.Vector3(0, 5, 0), new THREE.Vector3(0, 0, 0));
 
          // Roomba 1
-         this.roombaRadius = 1;
+         this.roombaRadius = 0.3;
          this.roombaHeight = 0.5;
          this.roombaGeometry = new THREE.CylinderGeometry(
             this.roombaRadius, 
@@ -32,9 +50,14 @@ define([
             this.roombaHeight, 
             32);
          this.roombaMaterial = new THREE.MeshBasicMaterial({map: texture, color: 0x66ccff});
-         this.roomba = new THREE.Mesh(this.roombaGeometry,
-                                      this.roombaMaterial);
+         this.roomba = new Juicy.Mesh(this.roombaGeometry,
+                                      this.roombaMaterial,
+                                      ['Momentum']);
          this.roomba.position.y += this.roombaHeight / 2;
+
+         this.cameraDirection = new THREE.Vector3(1, 0, 0);
+         this.cameraRight = new THREE.Vector3(0, 0, 1);
+         this.angle = Math.PI / 2;
 
          this.scene.add(this.roomba);
 
@@ -45,7 +68,30 @@ define([
              wall.position.y += wallHeight / 2;
          this.scene.add(wall);
 
+         wall = new THREE.Mesh(new THREE.BoxGeometry(1, wallHeight, wallLength), material);
+         wall.position.x = 7;
+         wall.position.y += wallHeight / 2;
+         this.scene.add(wall);
+
+         wall = new THREE.Mesh(new THREE.BoxGeometry(wallLength, wallHeight, 1), material);
+         wall.position.z = 7;
+         wall.position.y += wallHeight / 2;
+         this.scene.add(wall);
+
          window.game = this;
+
+         
+
+         var tilesize = 2;
+         map.forEach(function(row, x_2)) {
+            for (var z = 0; z < row.length; z ++) {
+               var tile = new THREE.Mesh(new THREE.BoxGeometry(1, 0.5, 1), material);
+                   tile.position.x = x;
+                   tile.position.z = z;
+                   tile.position.y = -0.25;
+               this.scene.add(tile);
+            }  
+         })
       },
 
       getCameraDirection: function(x, y, z) {
@@ -74,21 +120,27 @@ define([
       },
 
       update: function(dt, game) {
-         var speed = 10;
+         var speed = 25;
          if (game.keyDown('LEFT')) {
-            this.roomba.position.add(this.getCameraLeft().multiplyScalar(speed * dt));
+            this.roomba.applyForce(this.cameraRight.clone().multiplyScalar(speed * dt));
          }
          if (game.keyDown('RIGHT')) {
-            this.roomba.position.add(this.getCameraRight().multiplyScalar(speed * dt));
+            this.roomba.applyForce(this.cameraRight.clone().multiplyScalar(-speed * dt));
          }
          if (game.keyDown('UP')) {
-            this.roomba.position.add(this.getCameraFront().multiplyScalar(speed * dt));
+            this.roomba.applyForce(this.cameraDirection.clone().multiplyScalar(-speed * dt));
          }
          if (game.keyDown('DOWN')) {
-            this.roomba.position.add(this.getCameraBack().multiplyScalar(speed * dt));
+            this.roomba.applyForce(this.cameraDirection.clone().multiplyScalar(speed * dt));
          }
 
-         this.lookAt(new THREE.Vector3(10, 15, 0), this.roomba.position);
+         this.lookAt(
+            this.roomba.position.clone()
+               // .add(this.cameraDirection)
+               .add(new THREE.Vector3(0, 15, 0)),
+            this.roomba.position);
+
+         this.roomba.update(dt, game);
       }
    });
 });

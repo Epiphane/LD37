@@ -16,7 +16,7 @@ $(document).ready(function() {
       KeyMap,
       PeerObject
    ) {
-      window.GAME_WIDTH = 694,
+      window.GAME_WIDTH = 800,
       window.GAME_HEIGHT = 694;
 
       // Initialize scene & camera
