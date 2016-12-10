@@ -1,30 +1,52 @@
 define([
-   'component/momentum'
+   'box2d',
+   'component/momentum',
 ], function(
+   Box2D,
    Momentum
 ) {
    var ready;
 
-   // Load texture
+   // TWEAK THESE
+   var roombaRadius = 0.6;
+   var roombaHeight = 0.5;
+
+   // THREE.JS
+   var roombaGeometry = new THREE.CylinderGeometry(roombaRadius, roombaRadius, roombaHeight, 32);
    var texture = new THREE.TextureLoader().load('textures/square-outline-textured.png', function() {
       ready();
    });
-   var material = new THREE.MeshBasicMaterial({ color: 0xffffff, map: texture });
-
-   var roombaRadius = 0.3;
-   var roombaHeight = 0.5;
-   var roombaGeometry = new THREE.CylinderGeometry(
-      roombaRadius, 
-      roombaRadius, 
-      roombaHeight, 
-      32);
    var roombaMaterial = new THREE.MeshBasicMaterial({map: texture, color: 0x66ccff});
 
+   // BOX2D
+   var roombaBodyDef = new Box2D.b2BodyDef();
+       roombaBodyDef.set_type(Box2D.b2_dynamicBody);
+   var roombaShape = new Box2D.b2PolygonShape();
+       roombaShape.SetAsBox(1, 1);
+   var roombaFixtureDef = new Box2D.b2FixtureDef();
+       roombaFixtureDef.set_density(0.0);
+       roombaFixtureDef.set_shape(roombaShape);
+
+   // DEFINITION
    var Roomba = Juicy.Mesh.extend({
-      constructor: function() {
-         Juicy.Mesh.call(this, roombaGeometry, roombaMaterial, [Momentum]);
+      constructor: function(components, world) {
+         components.unshift(Momentum);
+
+         Juicy.Mesh.call(this, roombaGeometry, roombaMaterial, components);
 
          this.position.y += roombaHeight / 2;
+
+         // Initialize Box2D component
+         this.body = world.CreateBody(roombaBodyDef);
+         this.body.CreateFixture(roombaFixtureDef);
+         window.body = this.body;
+      },
+
+      update: function(dt, game) {
+         var bodyPos = this.body.GetPosition();
+         this.position.set(bodyPos.get_y(), this.position.y, -bodyPos.get_x());
+
+         Juicy.Mesh.prototype.update.apply(this, arguments);
       }
    });
 
@@ -33,7 +55,7 @@ define([
       Roomba.ready = true;
       while (onReady.length)
          onReady.shift()();
-   }
+   };
 
    Roomba.ready = false;
    Roomba.onReady = function(cb) {
