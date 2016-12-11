@@ -55,20 +55,15 @@ define([
          this.falling = false;
          this.respawn = 0;
          this.t = 0;
-
-         this.underneath = {};
       },
 
       beginContact: function(other) {
-         if (other instanceof Roomba && this.respawn) {
+         if (other instanceof Roomba) {
             // Unstable!
-            if (other.unstableFeet.indexOf(this.id) < 0) {
-               other.unstableFeet.push(this.id);
-            }
-            this.underneath[other.id] = other;
+            other.feet[this.id] = this;
          }
 
-         if (!(other instanceof Roomba) || this.respawn) {
+         if (!(other instanceof Roomba) || this.respawn || other.dead) {
             return;
          }
 
@@ -76,17 +71,21 @@ define([
          this.t = 0;
       },
 
+      fall: function() {
+         this.falling = true;
+         this.shaking = false;
+         this.t = 0;
+         this.respawn = 2;
+         this.getComponent('Fallable').fall();
+      },
+
       endContact: function(other) {
-         if (other instanceof Roomba && other.unstableFeet.indexOf(this.id) >= 0) {
-            other.unstableFeet.splice(other.unstableFeet.indexOf(this.id), 1);
+         if (other instanceof Roomba) {
+            delete other.feet[this.id];
          }
 
          if (this.shaking) {
-            this.falling = true;
-            this.shaking = false;
-            this.t = 0;
-            this.respawn = 2;
-            this.getComponent('Fallable').fall();
+            this.fall();
          }
       },
 
@@ -96,6 +95,10 @@ define([
          if (this.shaking) {
             this.t += dt;
             this.position.z += Math.sin(this.t * 50) / 15;
+
+            if (this.t > 1.5) {
+               this.fall();
+            }
          }
 
          if (this.respawn) {
@@ -103,14 +106,9 @@ define([
 
             if (this.respawn <= 0) {
                this.respawn = 0;
+               this.falling = false;
+               this.shaking = false;
                this.getComponent('Fallable').reset();
-
-               for (var id in this.underneath) {
-                  var ndx = this.underneath[id].unstableFeet.indexOf(this.id);
-                  if (ndx >= 0) {
-                     this.underneath[id].unstableFeet.splice(ndx, 1);
-                  }
-               }
             }
          }
       }

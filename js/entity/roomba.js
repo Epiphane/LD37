@@ -46,7 +46,9 @@ define([
          this.getComponent('OBJMesh').load('art/', 'test_texture.mtl', 'test_texture.obj');
          this.getComponent('OBJMesh').position.y -= 0.25;
 
-         this.unstableFeet = [];
+         this.feet = {};
+         this.respawnTimer = 0;
+         this.dead = false;
       },
 
       beginContact: function(other) {
@@ -65,6 +67,17 @@ define([
          other.endContact(this);
       },
 
+      respawn: function() {
+         this.dead = false;
+         this.respawnTimer = 0;
+         this.getComponent('Fallable').reset();
+      },
+
+      die: function() {
+         this.dead = true;
+         this.respawnTimer = 2;
+      },
+
       bodyDef: roombaBodyDef,
       fixtureDef: roombaFixtureDef,
       material: roombaMaterial,
@@ -73,12 +86,29 @@ define([
       update: function(dt, game) {
          Box2DMesh.prototype.update.apply(this, arguments);
 
-         if (this.unstableFeet.length > 4) {
-            this.getComponent('Fallable').fall();
+         if (this.dead) {
+            this.respawnTimer -= dt;
 
-            setTimeout(function() {
-               this.getComponent('Fallable').reset();
-            }.bind(this), 2000);
+            if (this.respawnTimer <= 0) {
+               this.respawn();
+            }
+         }
+
+         var unstable = 0;
+         var stable = 0;
+         for (var id in this.feet) {
+            var foot = this.feet[id];
+            if (foot.falling) {
+               unstable ++;
+            }
+            else {
+               stable ++;
+            }
+         }
+
+         if (unstable > 2) {
+            this.die();
+            this.getComponent('Fallable').fall();
          }
       }
    });
