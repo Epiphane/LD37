@@ -1,8 +1,10 @@
 define([
    'box2d',
+   'component/obj_mesh',
    'entity/box2d_mesh'
 ], function(
    Box2D,
+   OBJMesh,
    Box2DMesh
 ) {
    var ready;
@@ -18,26 +20,6 @@ define([
    });
    var roombaMaterial = new THREE.MeshBasicMaterial({map: texture, color: 0x66ccff});
 
-
-   var manager = new THREE.LoadingManager();
-   manager.onProgress = function ( item, loaded, total ) {
-      console.log( item, loaded, total );
-   };
-   var mtlLoader = new THREE.MTLLoader();
-      mtlLoader.setPath( 'art/' );
-      mtlLoader.load( 'test_texture.mtl', function( materials ) {
-         materials.preload();
-         var objLoader = new THREE.OBJLoader();
-         objLoader.setMaterials( materials );
-         window.m = materials;
-         objLoader.setPath( 'art/' );
-         objLoader.load( 'test_texture.obj', function ( object ) {
-            window.o = object;
-            o.position.set(6, 2, 2);
-            game.scene.add(o)
-         } );
-      });
-
    // BOX2D
    var roombaBodyDef = new Box2D.b2BodyDef();
        roombaBodyDef.set_type(Box2D.b2_dynamicBody);
@@ -52,9 +34,13 @@ define([
    // DEFINITION
    var Roomba = Box2DMesh.extend({
       constructor: function(components, world) {
+         components.unshift(OBJMesh);
+
          Box2DMesh.call(this, components, world);
 
          this.position.y += roombaHeight / 2;
+
+         this.getComponent('OBJMesh').load('art/', 'test_texture.mtl', 'test_texture.obj');
       },
 
       beginContact: function(other) {
