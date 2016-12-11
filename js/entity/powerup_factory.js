@@ -17,8 +17,27 @@ define([
          this.onDespawn = function() {};
       },
 
+      spawn: function(room) {
+         var spawns = room.spawns.all;
+         var spawn, type, position;
+         do {
+            spawn = spawns[Math.floor(Math.random() * spawns.length)];
+            type = spawn[2];
+            position = { x: spawn[0], z: spawn[1] };
+         } while (this.getPowerupAt(position));
+
+         if (type === 'POWERUP')
+            type = 'BLADE';
+
+         this.spawnPowerup(type, position);
+      },
+
       spawnPowerup: function(type, position, silent) {
          var spawn;
+
+         if (this.getPowerupAt(position)) {
+            console.error('Ya dingus! theres already a powerup at ' + position + '!');
+         }
 
          switch(type) {
          case 'COIN':

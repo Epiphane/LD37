@@ -18,6 +18,7 @@ define([
       var updateSpawnCallback = null;
       var requestSpawnCallback = null;
       var despawnCallback = null;
+      var syncSpawnCallback = null;
       var hasSyncedSpawns = false;
 
       // Keeps track of the stuff that syncs across the network.
@@ -190,9 +191,11 @@ define([
                }
                break;
                case 'SYNC_SPAWN':
-               console.log('My spawns are synced!');
-               hasSyncedSpawns = true;
-               break;
+                  console.log('My spawns are synced!');
+                  hasSyncedSpawns = true;
+                  if (syncSpawnCallback)
+                     syncSpawnCallback();
+                  break;
             }
          });
 
@@ -308,6 +311,9 @@ define([
          },
          despawnCallback: function(callback) {
             despawnCallback = callback;
+         }, 
+         syncSpawnCallback: function(callback) {
+            syncSpawnCallback = callback;
          }
       };
    })();
