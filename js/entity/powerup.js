@@ -63,6 +63,7 @@ define([
 
          this.setRespawn(10 + Math.random() * 5);
          this.onDespawn(this);
+         other.score ++;
       },
 
       endContact: function(other) {

@@ -50,6 +50,7 @@ define([
          this.respawnTimer = 0;
          this.dead = false;
          this.room = room;
+         this.score = 0;
       },
 
       beginContact: function(other) {

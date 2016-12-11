@@ -186,8 +186,10 @@ define([
             var posn = this.roomba.body.GetPosition();
             var velc = this.roomba.body.GetLinearVelocity();
             Network.broadcastRoombaState(
-               {x: posn.get_x(), y: posn.get_y()}, 
-               {x: velc.get_x(), y: velc.get_y()});
+               {x: posn.get_x(), y: posn.get_y()},
+               {x: velc.get_x(), y: velc.get_y()},
+               this.roomba.score
+            );
          }
       }
    });

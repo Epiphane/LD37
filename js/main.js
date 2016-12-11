@@ -60,3 +60,27 @@ $(document).ready(function() {
       return renderer.domElement;
    });
 });
+
+// Update hi score list every second
+setInterval(function() {
+   if (!window.scores) return;
+
+   var scoresSorted = [];
+   for (var handle in window.scores) {
+      scoresSorted.push({name: handle, score: window.scores[handle]});
+   }
+   scoresSorted.sort(function(a, b) {
+      return a.score - b.score;
+   });
+
+   for (var i = 1; i <= 10; i++) {
+      if (i < scoresSorted.length) {
+         jQuery("#" + i + "-place").show(0);
+         jQuery("#" + i + "-place-name").html(scoresSorted[i].name);
+         jQuery("#" + i + "-place-score").html(scoresSorted[i].score);
+      }
+      else {
+         jQuery("#" + i + "-place").hide(0);
+      }
+   }
+}, 1000);
