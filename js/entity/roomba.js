@@ -106,7 +106,7 @@ define([
             }
          }
 
-         if (unstable > 1) {
+         if (unstable > 2) {
             this.die();
             this.getComponent('Fallable').fall();
          }
