@@ -70,7 +70,7 @@ setInterval(function() {
       scoresSorted.push({name: handle, score: window.scores[handle]});
    }
    scoresSorted.sort(function(a, b) {
-      return a.score - b.score;
+      return b.score - a.score;
    });
 
    for (var i = 1; i <= 10; i++) {
