@@ -74,6 +74,11 @@ define([
          this.respawnTimer = 0;
          this.getComponent('Fallable').reset();
 
+         if (!this.room) {
+            console.error('Why is my room null? Who has done such a thing?');
+            return null;
+         }
+
          var spawns = this.room.spawns.player;
          var spawn = spawns[Math.floor(Math.random() * spawns.length)];
 

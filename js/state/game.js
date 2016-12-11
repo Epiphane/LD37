@@ -105,7 +105,7 @@ define([
          this.networkedRoombas = [];
          this.broadcastTick = 3;
          Network.newRoombaCallback(function(handle) {
-            var networkedRoomba = new Roomba([NetworkedRoomba], that.world);
+            var networkedRoomba = new Roomba([NetworkedRoomba], that.world, that.room);
             // later, maybe add a label with the roomba's name to the game world..?
             that.scene.add(networkedRoomba);
             that.networkedRoombas.push(networkedRoomba);
