@@ -53,6 +53,14 @@ define([
          this.perspective(38);
          this.lookAt(new THREE.Vector3(0, 5, 0), new THREE.Vector3(0, 0, 0));
 
+         // Lighting for OBJ files
+         var ambient = new THREE.AmbientLight(0xffffff);
+         this.scene.add(ambient);
+         
+         var directionalLight = new THREE.DirectionalLight(0xffeedd);
+             directionalLight.position.set(0, 0, 1).normalize();
+         this.scene.add(directionalLight);
+
          // Camera Manager
          this.cameraMan = new CameraManager(this.camera);
 
@@ -113,6 +121,9 @@ define([
          this.cameraMan.update(dt);
 
          this.scene.children.forEach(function(child) {
+            if (!child.update)
+               return;
+
             child.update(dt, game);
          });
 
