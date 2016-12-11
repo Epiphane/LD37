@@ -95,6 +95,7 @@ define([
 
          // Roomba 1
          this.roomba = new Roomba([RoombaInput], this.world, this.room);
+         this.roomba.isPlayer = true;
          this.scene.add(this.roomba);
 
          // Camera magic

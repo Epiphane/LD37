@@ -15,8 +15,10 @@ define([
          this.entity.body.SetLinearVelocity(new Box2D.b2Vec2(data.velocity.x, data.velocity.y));
 
          // Get score, update hi-score table
-         window.scores[data.name] = data.score;
-         
+         if (window.scores[data.name] !== data.score) {
+            window.scores[data.name] = data.score;
+            updateHighScores();
+         }
       },
    });
 });

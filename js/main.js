@@ -62,7 +62,7 @@ $(document).ready(function() {
 });
 
 // Update hi score list every second
-setInterval(function() {
+function updateHighScores() {
    if (!window.scores) return;
 
    var scoresSorted = [];
@@ -83,7 +83,7 @@ setInterval(function() {
          jQuery("#" + i + "-place").hide(0);
       }
    }
-}, 1000);
+}
 
 // Prevent arrow keys from scrolling
 window.addEventListener("keydown", function(e) {

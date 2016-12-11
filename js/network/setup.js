@@ -78,6 +78,7 @@ define([
          evt.preventDefault();
 
          window.myHandle = jQuery('form').serializeArray()[0]["value"];
+         window.scores[window.myHandle] = 0;
 
          if (myId === "") {
             // I made a race condition. If the peerJS server doesn't respond in
@@ -120,6 +121,8 @@ define([
 
          new_connection.on('error', function(err) {
             console.warn("UH OH: My friend " + handle + " broke!!! Let's kill him :(" + JSON.stringify(err));
+            delete window.scores[handle];
+            updateHighScores();
             jQuery.ajax({
                url: API_URL + 'peer/' + new_connection.peer,
                type: 'DELETE',

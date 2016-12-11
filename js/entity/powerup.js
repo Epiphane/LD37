@@ -57,7 +57,7 @@ define([
             return;
 
          // Only collide with Roombas
-         if (!(other instanceof Roomba)) {
+         if (!other.isPlayer) {
             return;
          }
 
@@ -65,6 +65,7 @@ define([
          this.onDespawn(this);
          other.score ++;
          window.scores[window.myHandle] = other.score;
+         updateHighScores();
       },
 
       endContact: function(other) {
