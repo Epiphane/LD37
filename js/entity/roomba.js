@@ -49,6 +49,7 @@ define([
          this.feet = {};
          this.respawnTimer = 0;
          this.dead = false;
+         this.score = 0;
       },
 
       beginContact: function(other) {

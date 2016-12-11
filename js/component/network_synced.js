@@ -11,9 +11,10 @@ define([
       },
 
       networkUpdate: function(data) {
-         // console.log("Set my man " + data.name + " to " + JSON.stringify(data.position));
          this.entity.body.SetTransform(new Box2D.b2Vec2(data.position.x, data.position.y), this.entity.body.GetAngle());
          this.entity.body.SetLinearVelocity(new Box2D.b2Vec2(data.velocity.x, data.velocity.y));
+
+
       },
    });
 });

@@ -44,7 +44,8 @@ define([
             return;
          }
 
-         console.log('V R R O O M M B A A');
+         other.score ++;
+         console.log('V R R O O M M B A A score ' + other.score);
          this.shouldRemove = true;
       },
 

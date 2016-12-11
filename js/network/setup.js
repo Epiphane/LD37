@@ -45,7 +45,7 @@ define([
       });
 
       // Key = peerId, vaue = PeerJS connection object
-      var peers = {};
+      window.peers = {};
       // Array like:
       // [ {name: "Elliot", peerID: "asdf" } ]
       var serverPeerResult = [];
@@ -59,7 +59,7 @@ define([
             success: function(data) {
                serverPeerResult = data;
                data.forEach(function(newFriend) {
-                  var new_connection = peerAPI.connect(newFriend.peerid, {reliable: true});
+                  var new_connection = peerAPI.connect(newFriend.peerid, {reliable: false});
 
                   new_connection.on('open', function() {
                      // Yay! We're connected to a new friend!
@@ -146,13 +146,14 @@ define([
          return text;
       }
 
-      function broadcastRoombaState(position, velocity) {
+      function broadcastRoombaState(position, velocity, score) {
          for (var handle in peers) {
             peers[handle].send({
                type: "UPDATE_OBJECT",
                name: myHandle,
                position: position,
-               velocity: velocity
+               velocity: velocity,
+               score: score
             });
          }
       }
