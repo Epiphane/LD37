@@ -14,6 +14,8 @@ define([
    var BladePowerup = Powerup.extend({
       material: material,
 
+      powerup: 'BLADE',
+
       setType: function(type) {
          console.log(type);
       },

@@ -38,18 +38,24 @@ define([
 
          this.visible = true;
          this.respawnTimer = 0;
+         this.shouldRemove = false;
 
          this.onRespawn = function() {};
          this.onDespawn = function() {};
       },
+
+      powerup: 'COIN',
 
       setType: function(type) {
          console.log(type);
       },
 
       setRespawn: function(value) {
-         this.respawnTimer = value;
-         this.visible = (value === 0);
+         // this.respawnTimer = value;
+         // this.visible = (value === 0);
+
+         this.onDespawn();
+         this.shouldRemove = true;
       },
 
       beginContact: function(other) {
@@ -61,7 +67,7 @@ define([
             return false;
          }
 
-         this.setRespawn(10 + Math.random() * 5);
+         this.shouldRemove = true;
          this.onDespawn(this);
          other.score ++;
          window.scores[window.myHandle] = other.score;
@@ -78,14 +84,14 @@ define([
 
          this.rotation.z += dt;
 
-         if (!this.visible) {
-            this.respawnTimer -= dt;
+         // if (!this.visible) {
+         //    this.respawnTimer -= dt;
 
-            if (this.respawnTimer <= 0) {
-               this.setRespawn(0);
-               this.onRespawn(this);
-            }
-         }
+         //    if (this.respawnTimer <= 0) {
+         //       this.setRespawn(0);
+         //       this.onRespawn(this);
+         //    }
+         // }
       },
 
       bodyDef: powerupBodyDef,

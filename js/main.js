@@ -20,10 +20,37 @@ $(document).ready(function() {
       window.GAME_WIDTH = 800,
       window.GAME_HEIGHT = 694;
 
-      // Show name modal
-      jQuery("#myModal").modal('show');
       var form = document.getElementById("html-sux");
       form.onsubmit = Network.submitHandleCallback;
+      // Show name modal
+      if (location.href.indexOf('localhost') >= 0) {
+         // var online = jQuery('<button class="btn btn-primary" style="position:fixed;bottom:0;left:0">Go Online</button>');
+         // jQuery('body').append(online);
+
+         // online.click(function() {
+         //    jQuery("#myModal").modal('show');
+         //    online.remove();
+         // });
+
+         var fpsOutput = document.createElement('div');
+         fpsOutput.id = 'debug';
+
+         Juicy.Game.setDebug(fpsOutput);
+         document.body.appendChild(fpsOutput);
+
+         var l = 'abcdefghijklmnopqrstuvwxyz';
+         var randomStr = '';
+         for (var letter = 0; letter < 10; letter ++) {
+            randomStr += l[Math.floor(Math.random() * l.length)];
+         }
+
+         jQuery('#fart').val(randomStr);
+         jQuery("#myModal").modal('show');
+         jQuery('form').submit();
+      }
+      else {
+         jQuery("#myModal").modal('show');
+      }
 
       // Initialize scene & camera
       var renderer = new THREE.WebGLRenderer();
@@ -32,14 +59,6 @@ $(document).ready(function() {
       jQuery('#game').append(renderer.domElement);
 
       Juicy.Game.init(renderer, GAME_WIDTH, GAME_HEIGHT, KeyMap);
-
-      // if (location.href.indexOf('localhost') >= 0) {
-      //    var fpsOutput = document.createElement('div');
-      //    fpsOutput.id = 'debug';
-
-      //    Juicy.Game.setDebug(fpsOutput);
-      //    document.body.appendChild(fpsOutput);
-      // }
 
       // Load sounds
       // Juicy.Sound.load('select', './audio/select2.mp3', false);

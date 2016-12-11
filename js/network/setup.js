@@ -15,6 +15,10 @@ define([
       var newRoombaCallback = null;
       var roombaDisconnectedCallback = null;
       var updateCoinCallback = null;
+      var updateSpawnCallback = null;
+      var requestSpawnCallback = null;
+      var despawnCallback = null;
+      var hasSyncedSpawns = false;
 
       // Keeps track of the stuff that syncs across the network.
       // For roombas, the key is the user's handle and the value is
@@ -23,10 +27,14 @@ define([
       var networkSyncedEntities = {};
 
       // Just connected to remote peer server
+      var delayedModalSubmit = null;
       peerAPI.on('open', function(id) {
          console.log("This my id fam: " + id);
 
          myId = id;
+
+         if (delayedModalSubmit)
+            delayedModalSubmit();
       });
 
       // Listens for NEW PEOPLE connecting TO me
@@ -84,6 +92,8 @@ define([
                      });
                   })
                });
+
+               hasSyncedSpawns = (data.length === 0);
             }
          });
       }
@@ -97,10 +107,10 @@ define([
          updateHighScores();
 
          if (myId === "") {
-            // I made a race condition. If the peerJS server doesn't respond in
-            // time (i.e. before the user puts in a handle, somehow) EVERYTHING
-            // IS RUINED
-            window.alert("OH NO my crappy code caught up to me. What will I do??");
+            delayedModalSubmit = function() {
+               submitHandle(evt);
+            }
+            return;
          }
 
          // POST my new peer id
@@ -156,14 +166,38 @@ define([
                case 'UPDATE_OBJECT':
                   networkSyncedEntities[data.name.toLowerCase()].networkUpdate(data);
                   break;
+               case 'DESPAWN':
+                  despawnCallback(data);
+                  break;
                case 'SPAWN':
-                  if (updateCoinCallback)
-                     updateCoinCallback(data);
+               case 'SPAWNS':
+                  if (updateSpawnCallback)
+                     updateSpawnCallback(data);
                   break;
                case 'REQUEST_SPAWNS':
+                  if (requestSpawnCallback) {
+                     var spawnData = requestSpawnCallback();
+
+                     peers[data.name].send({
+                        type: 'SPAWNS',
+                        name: window.myHandle,
+                        data: spawnData
+                     });
+                     peers[data.name].send({
+                        type: 'SYNC_SPAWN',
+                        name: window.myHandle
+                     })
+                  }
+                  break;
+               case 'SYNC_SPAWN':
+                  console.log('My spawns are synced!');
+                  hasSyncedSpawns = true;
                   break;
             }
          });
+
+         if (!hasSyncedSpawns) {
+            initialRequestSpawnTimers();
 
          // somebody peacefully disconnected. END THEM.
          new_connection.on('disconnected', function() {
@@ -200,18 +234,36 @@ define([
          }
       }
 
-      function broadcastSpawnTimer(position, timer) {
+      function broadcastSpawn(spawned) {
          for (var handle in peers) {
             peers[handle].send({
                type: "SPAWN",
                name: window.myHandle,
-               position: {x: position.x, y: position.y},
-               respawn: timer
+               data: [{
+                  type: spawned.powerup,
+                  position: {x: spawned.position.x, z: spawned.position.z}
+               }]
             });
          }
       }
 
-      function requestSpawnTimers(callback) {
+      function broadcastDespawn(despawned) {
+         for (var handle in peers) {
+            peers[handle].send({
+               type: "DESPAWN",
+               name: window.myHandle,
+               position: {x: despawned.position.x, z: despawned.position.z}
+            });
+         }
+      }
+
+      var POLL_DELAY = 250;
+      function initialRequestSpawnTimers() {
+         if (hasSyncedSpawns)
+            return;
+
+         setTimeout(initialRequestSpawnTimers, POLL_DELAY);
+
          var handles = Object.keys(peers);
          if (handles.length === 0) {
             return;
@@ -219,6 +271,7 @@ define([
 
          var tribute = handles[Math.floor(Math.random() * handles.length)];
 
+         console.log('Syncing spawns with ' + tribute + '...');
          peers[tribute].send({
             type: 'REQUEST_SPAWNS',
             name: window.myHandle
@@ -228,8 +281,9 @@ define([
       return {
          submitHandleCallback: submitHandle,
          broadcastRoombaState: broadcastRoombaState,
-         broadcastSpawnTimer: broadcastSpawnTimer,
-         requestSpawnTimers: requestSpawnTimers,
+         broadcastSpawn: broadcastSpawn,
+         broadcastDespawn: broadcastDespawn,
+         initialRequestSpawnTimers: initialRequestSpawnTimers,
          newRoombaCallback: function(callback) {
             newRoombaCallback = callback;
          },
@@ -238,6 +292,15 @@ define([
          },
          updateCoinCallback: function(callback) {
             updateCoinCallback = callback;
+         },
+         updateSpawnCallback: function(callback) {
+            updateSpawnCallback = callback;
+         },
+         requestSpawnCallback: function(callback) {
+            requestSpawnCallback = callback;
+         },
+         despawnCallback: function(callback) {
+            despawnCallback = callback;
          }
       }
    })();

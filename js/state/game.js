@@ -4,7 +4,7 @@ define([
    'helper/camera',
    'entity/roomba',
    'entity/map',
-   'entity/powerup',
+   'entity/powerup_factory',
    'component/roomba_input',
    'network/setup',
    'component/network_synced',
@@ -15,7 +15,7 @@ define([
    CameraManager,
    Roomba,
    Map,
-   Powerup,
+   PowerupFactory,
    RoombaInput,
    Network,
    NetworkedRoomba,
@@ -79,17 +79,6 @@ define([
 
             this.room.loadImage(mapCanvas, this.world);
             this.roomba.respawn();
-
-            var onRespawn = this.onCoinRespawn.bind(this);
-            var onDespawn = this.onCoinDespawn.bind(this);
-            this.room.coins.forEach(function(coin) {
-               coin.onRespawn = onRespawn;
-               coin.onDespawn = onDespawn;
-            });
-
-            Network.requestSpawnTimers(function(data) {
-               this.updateCoinSpawns(data);
-            });
          }.bind(this);
 
          // Roomba 1
@@ -118,22 +107,35 @@ define([
             that.networkedRoombas.splice(ndx, 1);
          });
 
-         Network.updateCoinCallback(function(data) {
-            var coin = that.room.getCoinAt(data.position.x, data.position.y);
-            if (coin) {
-               coin.setRespawn(data.respawn);
-            }
+         this.powerups = new PowerupFactory(this.world);
+         this.powerups.onSpawn = this.onSpawn.bind(this);
+         this.powerups.onDespawn = this.onDespawn.bind(this);
+         this.scene.add(this.powerups);
+         Network.updateSpawnCallback(function(data) {
+            data.data.forEach(function(powerup) {
+               that.powerups.spawnPowerup(powerup.type, powerup.position, true);
+            })
+         });
+
+         Network.despawnCallback(function(data) {
+            var powerup = that.powerups.getPowerupAt(data.position);
+            if (powerup)
+               powerup.shouldRemove = true;
+         });
+
+         Network.requestSpawnCallback(function() {
+            return that.powerups.getSpawnData();
          });
 
          this.roomba.body.ApplyLinearImpulse(new Box2D.b2Vec2(-0.01, -0.01), this.roomba.body.GetPosition());
       },
 
-      onCoinRespawn: function(coin) {
-         Network.broadcastSpawnTimer(coin.position, coin.respawnTimer);
+      onSpawn: function(coin) {
+         Network.broadcastSpawn(coin);
       },
 
-      onCoinDespawn: function(coin) {
-         Network.broadcastSpawnTimer(coin.position, coin.respawnTimer);
+      onDespawn: function(coin) {
+         Network.broadcastDespawn(coin);
       },
 
       updateCoinSpawns: function(data) {
