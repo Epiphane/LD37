@@ -190,15 +190,26 @@ define([
                   peers[data.name].send({
                      type: 'SYNC_SPAWN',
                      name: window.myHandle
-                  })
+                  });
                }
                break;
                case 'SYNC_SPAWN':
-                  console.log('My spawns are synced!');
-                  hasSyncedSpawns = true;
-                  if (syncSpawnCallback)
-                     syncSpawnCallback();
-                  break;
+               console.log('My spawns are synced!');
+               hasSyncedSpawns = true;
+               if (syncSpawnCallback)
+               syncSpawnCallback();
+               break;
+               case 'DEATH':
+               console.log("someone died :( " + data.name + " " + data.how);
+               if (data.how === 'fall') {
+                  networkSyncedEntities[data.name.toLowerCase()].entity.fallDeath();
+               }
+               else if (data.how === 'weapon') {
+                  networkSyncedEntities[data.name.toLowerCase()].entity.weaponDeath();
+               }
+               else {
+                  console.error("Murder mystery: " + data.how);
+               }
             }
          });
 
@@ -238,6 +249,17 @@ define([
          state.name = window.myHandle;
          for (var handle in peers) {
             peers[handle].send(state);
+         }
+      }
+
+      function broadcastDeath(how) {
+         var dstate = {
+            type: 'DEATH',
+            name: window.myHandle,
+            how: how
+         };
+         for (var handle in peers) {
+            peers[handle].send(dstate);
          }
       }
 
@@ -295,6 +317,7 @@ define([
          submitHandleCallback: submitHandle,
          broadcastRoombaState: broadcastRoombaState,
          broadcastSpawn: broadcastSpawn,
+         broadcastDeath: broadcastDeath,
          broadcastDespawn: broadcastDespawn,
          initialRequestSpawnTimers: initialRequestSpawnTimers,
          newRoombaCallback: function(callback) {

@@ -8,6 +8,8 @@ define([
          Juicy.Component.call(this);
 
          this.entity = entity;
+
+         this.entity.networked = true;
       },
 
       networkUpdate: function(data) {

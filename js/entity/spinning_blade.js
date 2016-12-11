@@ -59,7 +59,9 @@ define([
                // other.body.ApplyForce(rando, other.body.GetWorldCenter());
             }
             else {
-               other.weaponDeath();
+               if (!other.networked) {
+                  other.weaponDeath();
+               }
             }
          }
       },

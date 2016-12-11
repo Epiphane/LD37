@@ -41,6 +41,7 @@ define([
          var spawn;
 
          if (this.getPowerupAt(position)) {
+            return;
             console.error('Ya dingus! theres already a powerup at', position);
          }
 
@@ -55,7 +56,7 @@ define([
             console.log('Type ' + type + ' not recognized :O');
             return;
          }
-         
+
          spawn.setPosition(position.x, spawn.position.y, position.z);
          spawn.onDespawn = this.onDespawn;
          this.add(spawn);

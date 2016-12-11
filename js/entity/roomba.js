@@ -3,13 +3,15 @@ define([
    'component/fallable',
    'component/killable',
    'entity/spinning_blade',
-   'entity/box2d_mesh'
+   'entity/box2d_mesh',
+   'network/setup'
 ], function(
    Box2D,
    Fallable,
    Killable,
    SpinningBlade,
-   Box2DMesh
+   Box2DMesh,
+   Network
 ) {
    var ready;
 
@@ -107,18 +109,21 @@ define([
          this.setPosition(spawn[0], this.position.y, spawn[1]);
       },
 
-      die: function() {
+      die: function(how) {
+         if (this.dead) return;
+         
          this.dead = true;
          this.respawnTimer = 2;
+         Network.broadcastDeath(how);
       },
 
       fallDeath: function() {
-         this.die();
+         this.die('fall');
          this.getComponent('Fallable').fall();
       },
 
       weaponDeath: function() {
-         this.die();
+         this.die('weapon');
          this.getComponent('Killable').kill();
       },
 
@@ -138,20 +143,22 @@ define([
             }
          }
 
-         var unstable = 0;
-         var stable = 0;
-         for (var id in this.feet) {
-            var foot = this.feet[id];
-            if (foot.falling) {
-               unstable ++;
+         if (!this.networked) {
+            var unstable = 0;
+            var stable = 0;
+            for (var id in this.feet) {
+               var foot = this.feet[id];
+               if (foot.falling) {
+                  unstable ++;
+               }
+               else {
+                  stable ++;
+               }
             }
-            else {
-               stable ++;
-            }
-         }
 
-         if (unstable > 2) {
-            this.fallDeath();
+            if (unstable > 2) {
+               this.fallDeath();
+            }
          }
       }
    });
