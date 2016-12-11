@@ -20,23 +20,28 @@ define([
       spawn: function(room) {
          var spawns = room.spawns.all;
          var spawn, type, position;
+         var tries = 5;
          do {
             spawn = spawns[Math.floor(Math.random() * spawns.length)];
             type = spawn[2];
             position = { x: spawn[0], z: spawn[1] };
+
+            if (--tries < 0)
+               return;
          } while (this.getPowerupAt(position));
 
          if (type === 'POWERUP')
             type = 'BLADE';
 
          this.spawnPowerup(type, position);
+            console.log('Check', position);
       },
 
       spawnPowerup: function(type, position, silent) {
          var spawn;
 
          if (this.getPowerupAt(position)) {
-            console.error('Ya dingus! theres already a powerup at ' + position + '!');
+            console.error('Ya dingus! theres already a powerup at', position);
          }
 
          switch(type) {
