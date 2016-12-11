@@ -32,8 +32,6 @@ define([
        wallFixtureDef.set_shape(wallShape);
 
    var FallingTile = Box2DMesh.extend({
-      // components: [Fallable],
-
       geometry: tileGeometry,
       material: new THREE.MeshBasicMaterial({ color: 0xaaaaaa, map: texture }),
       bodyDef: {
@@ -48,6 +46,8 @@ define([
          }
       },
 
+      components: ['Fallable'],
+
       constructor: function() {
          Box2DMesh.apply(this, arguments);
 
@@ -55,9 +55,19 @@ define([
          this.falling = false;
          this.respawn = 0;
          this.t = 0;
+
+         this.underneath = {};
       },
 
       beginContact: function(other) {
+         if (other instanceof Roomba && this.respawn) {
+            // Unstable!
+            if (other.unstableFeet.indexOf(this.id) < 0) {
+               other.unstableFeet.push(this.id);
+            }
+            this.underneath[other.id] = other;
+         }
+
          if (!(other instanceof Roomba) || this.respawn) {
             return;
          }
@@ -67,11 +77,16 @@ define([
       },
 
       endContact: function(other) {
+         if (other instanceof Roomba && other.unstableFeet.indexOf(this.id) >= 0) {
+            other.unstableFeet.splice(other.unstableFeet.indexOf(this.id), 1);
+         }
+
          if (this.shaking) {
             this.falling = true;
             this.shaking = false;
             this.t = 0;
-            this.respawn = 1;
+            this.respawn = 2;
+            this.getComponent('Fallable').fall();
          }
       },
 
@@ -80,7 +95,23 @@ define([
 
          if (this.shaking) {
             this.t += dt;
-            this.position.z += Math.sin(this.t * 30) / 10;
+            this.position.z += Math.sin(this.t * 50) / 15;
+         }
+
+         if (this.respawn) {
+            this.respawn -= dt;
+
+            if (this.respawn <= 0) {
+               this.respawn = 0;
+               this.getComponent('Fallable').reset();
+
+               for (var id in this.underneath) {
+                  var ndx = this.underneath[id].unstableFeet.indexOf(this.id);
+                  if (ndx >= 0) {
+                     this.underneath[id].unstableFeet.splice(ndx, 1);
+                  }
+               }
+            }
          }
       }
    });

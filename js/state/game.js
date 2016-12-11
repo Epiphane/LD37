@@ -145,7 +145,10 @@ define([
          if (this.broadcastTick === 0) {
             this.broadcastTick = 2;
             var posn = this.roomba.body.GetPosition();
-            Network.broadcastRoombaState({x: posn.get_x(), y: posn.get_y()});
+            var velc = this.roomba.body.GetLinearVelocity();
+            Network.broadcastRoombaState(
+               {x: posn.get_x(), y: posn.get_y()}, 
+               {x: velc.get_x(), y: velc.get_y()});
          }
       }
    });

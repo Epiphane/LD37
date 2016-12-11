@@ -1,10 +1,12 @@
 define([
    'box2d',
    'component/obj_mesh',
+   'component/fallable',
    'entity/box2d_mesh'
 ], function(
    Box2D,
    OBJMesh,
+   Fallable,
    Box2DMesh
 ) {
    var ready;
@@ -35,13 +37,16 @@ define([
    var Roomba = Box2DMesh.extend({
       constructor: function(components, world) {
          components.unshift(OBJMesh);
+         components.unshift(Fallable);
 
          Box2DMesh.call(this, components, world);
 
          this.position.y += roombaHeight / 2;
 
          this.getComponent('OBJMesh').load('art/', 'test_texture.mtl', 'test_texture.obj');
-         this.getComponent('OBJMesh').position.y -= 0.25;;
+         this.getComponent('OBJMesh').position.y -= 0.25;
+
+         this.unstableFeet = [];
       },
 
       beginContact: function(other) {
@@ -55,7 +60,7 @@ define([
       endContact: function(other) {
          if (other instanceof Roomba)
             return;
-         
+
          // Let other object define behavior?
          other.endContact(this);
       },
@@ -63,7 +68,15 @@ define([
       bodyDef: roombaBodyDef,
       fixtureDef: roombaFixtureDef,
       material: roombaMaterial,
-      geometry: roombaGeometry
+      geometry: roombaGeometry,
+
+      update: function(dt, game) {
+         Box2DMesh.prototype.update.apply(this, arguments);
+
+         if (this.unstableFeet.length > 4) {
+            this.getComponent('Fallable').fall();
+         }
+      }
    });
 
    var onReady = [];
