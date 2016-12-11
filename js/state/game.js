@@ -126,7 +126,7 @@ define([
          var self = this;
 
          // Using 1/60 instead of dt because fixed-time calculations are more accurate
-         this.world.Step(1/60, 3, 2);
+         this.world.Step(1/60, 1, 1);
 
          this.cameraMan.update(dt);
 
