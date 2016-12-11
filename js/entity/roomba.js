@@ -75,6 +75,10 @@ define([
 
          if (this.unstableFeet.length > 4) {
             this.getComponent('Fallable').fall();
+
+            setTimeout(function() {
+               this.getComponent('Fallable').reset();
+            }.bind(this), 2000);
          }
       }
    });
