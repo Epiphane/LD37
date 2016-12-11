@@ -32,7 +32,6 @@ define([
    var mapImage = new Image();
        mapImage.src = './textures/room.png';
    var mapCanvas = document.createElement('canvas');
-       window.m = mapCanvas;
        mapImage.onload = function() {
          mapCanvas.width = mapImage.width;
          mapCanvas.height = mapImage.height;
@@ -104,7 +103,6 @@ define([
 
          var that = this;
          this.networkedRoombas = [];
-         this.broadcastTick = 3;
          Network.newRoombaCallback(function(handle) {
             var networkedRoomba = new Roomba([NetworkedRoomba], that.world, that.room);
             // later, maybe add a label with the roomba's name to the game world..?
@@ -136,14 +134,6 @@ define([
          })
       },
 
-      spawnPowerup: function(location, type) {
-         var spawned = new Powerup(this.world);
-             spawned.setPosition(location.x, spawned.position.y, location.z);
-             spawned.setType(type);
-
-         this.scene.add(spawned);
-      },
-
       beginContact: function(contact, idA, idB) {
          var A = this.scene.getObjectById(idA);
          var B = this.scene.getObjectById(idB);
@@ -164,7 +154,8 @@ define([
          var self = this;
 
          // Using 1/60 instead of dt because fixed-time calculations are more accurate
-         this.world.Step(1/60, 1, 1);
+         if (window.go)
+            this.world.Step(1/60, 1, 1);
 
          this.cameraMan.update(dt);
 
@@ -178,18 +169,6 @@ define([
                self.scene.remove(child);
             }
          });
-
-         this.broadcastTick--
-         if (this.broadcastTick === 0) {
-            this.broadcastTick = 1;
-            var posn = this.roomba.body.GetPosition();
-            var velc = this.roomba.body.GetLinearVelocity();
-            Network.broadcastRoombaState(
-               {x: posn.get_x(), y: posn.get_y()},
-               {x: velc.get_x(), y: velc.get_y()},
-               this.roomba.score
-            );
-         }
       }
    });
 });

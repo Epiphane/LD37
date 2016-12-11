@@ -60,6 +60,12 @@ define([
          this.position.set(bodyPos.get_y(), this.position.y, -bodyPos.get_x());
 
          Juicy.Mesh.prototype.update.apply(this, arguments);
+         
+         this.children.forEach(function(child) {
+            if (child.update) {
+               child.update(dt, game);
+            }
+         });
       }
    });
 

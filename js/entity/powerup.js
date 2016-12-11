@@ -54,11 +54,11 @@ define([
 
       beginContact: function(other) {
          if (!this.visible)
-            return;
+            return false;
 
          // Only collide with Roombas
          if (!other.isPlayer) {
-            return;
+            return false;
          }
 
          this.setRespawn(10 + Math.random() * 5);
@@ -66,6 +66,8 @@ define([
          other.score ++;
          window.scores[window.myHandle] = other.score;
          updateHighScores();
+
+         return true;
       },
 
       endContact: function(other) {

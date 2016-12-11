@@ -78,7 +78,8 @@ define([
          evt.preventDefault();
 
          window.myHandle = jQuery('form').serializeArray()[0]["value"];
-         window.scores[window.myHandle] = 0;
+         window.scores[window.myHandle.toLowerCase()] = 0;
+         updateHighScores();
 
          if (myId === "") {
             // I made a race condition. If the peerJS server doesn't respond in
@@ -161,28 +162,13 @@ define([
          return text;
       }
 
-      function broadcastRoombaState(position, velocity, score) {
+      function broadcastRoombaState(state) {
+         state.type = 'UPDATE_OBJECT';
+         state.name = window.myHandle;
          for (var handle in peers) {
-            peers[handle].send({
-               type: "UPDATE_OBJECT",
-               name: window.myHandle,
-               position: position,
-               velocity: velocity,
-               score: score
-            });
+            peers[handle].send(state);
          }
       }
-
-      // function broadcastSpawn(type, position) {
-      //    for (var handle in peers) {
-      //       peers[handle].send({
-      //          type: "SPAWN",
-      //          name: myHandle,
-      //          position: position,
-      //          type: type
-      //       });
-      //    }
-      // }
 
       function broadcastSpawnTimer(position, timer) {
          for (var handle in peers) {

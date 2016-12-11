@@ -1,12 +1,14 @@
 define([
    'box2d',
-   'component/obj_mesh',
    'component/fallable',
+   'component/killable',
+   'entity/spinning_blade',
    'entity/box2d_mesh'
 ], function(
    Box2D,
-   OBJMesh,
    Fallable,
+   Killable,
+   SpinningBlade,
    Box2DMesh
 ) {
    var ready;
@@ -25,7 +27,6 @@ define([
    // BOX2D
    var roombaBodyDef = new Box2D.b2BodyDef();
        roombaBodyDef.set_type(Box2D.b2_dynamicBody);
-       roombaBodyDef.set_position(new Box2D.b2Vec2(-2, 2));
        roombaBodyDef.set_linearDamping(5.0);
    var roombaShape = new Box2D.b2CircleShape();
        roombaShape.set_m_radius(roombaRadius);;
@@ -36,21 +37,36 @@ define([
    // DEFINITION
    var Roomba = Box2DMesh.extend({
       constructor: function(components, world, room) {
-         components.unshift(OBJMesh);
          components.unshift(Fallable);
+         components.unshift(Killable);
+
+         this.material = roombaMaterial.clone();
 
          Box2DMesh.call(this, components, world);
 
          this.position.y += roombaHeight / 2;
-
-         this.getComponent('OBJMesh').load('art/', 'test_texture.mtl', 'test_texture.obj');
-         this.getComponent('OBJMesh').position.y -= 0.25;
 
          this.feet = {};
          this.respawnTimer = 0;
          this.dead = false;
          this.room = room;
          this.score = 0;
+
+         this.add(this.blade = new SpinningBlade(world));
+         var joint = new Box2D.b2WeldJointDef();
+             joint.set_collideConnected(false);
+
+         joint.Initialize(this.body, this.blade.body, new Box2D.b2Vec2(0.0, 0.0));
+         world.CreateJoint(joint);
+      },
+
+      setPosition: function(x, y, z) {
+         Box2DMesh.prototype.setPosition.apply(this, arguments);
+
+         // Update the blade b2Body...
+         Box2DMesh.prototype.setPosition.apply(this.blade, arguments);
+         // But anchor the visual part
+         this.blade.position.set(0, 0, 0);
       },
 
       beginContact: function(other) {
@@ -73,6 +89,8 @@ define([
          this.dead = false;
          this.respawnTimer = 0;
          this.getComponent('Fallable').reset();
+         this.getComponent('Killable').reset();
+         this.blade.visible = false;
 
          if (!this.room) {
             console.error('Why is my room null? Who has done such a thing?');
@@ -88,6 +106,16 @@ define([
       die: function() {
          this.dead = true;
          this.respawnTimer = 2;
+      },
+
+      fallDeath: function() {
+         this.die();
+         this.getComponent('Fallable').fall();
+      },
+
+      weaponDeath: function() {
+         this.die();
+         this.getComponent('Killable').kill();
       },
 
       bodyDef: roombaBodyDef,
@@ -119,8 +147,7 @@ define([
          }
 
          if (unstable > 2) {
-            this.die();
-            this.getComponent('Fallable').fall();
+            this.fallDeath();
          }
       }
    });

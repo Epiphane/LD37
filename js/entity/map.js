@@ -2,7 +2,7 @@ define([
    'box2d',
    'entity/box2d_mesh',
    'entity/roomba',
-   'entity/powerup',
+   'entity/powerup_blade',
    'component/fallable'
 ], function(
    Box2D,
@@ -199,16 +199,16 @@ define([
                      break;
                   case COIN:
                      var coin = new Powerup(world);
-                         coin.setPosition(x, coin.position.y, this.tiles.length - z);
+                         coin.setPosition(x, coin.position.y, this.tiles.length - 1 - z);
 
                      this.coins.push(coin);
                      this.add(coin);
                      break;
                   case POWERUP:
-                     this.spawns.powerup.push([x, this.tiles.length - z]);
+                     this.spawns.powerup.push([x, this.tiles.length - 1 - z]);
                      break;
                   case SPAWN:
-                     this.spawns.player.push([x, this.tiles.length - z]);
+                     this.spawns.player.push([x, this.tiles.length - 1 - z]);
                      break;
                }
    
