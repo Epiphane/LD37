@@ -127,11 +127,11 @@ define([
          Juicy.Entity.apply(this, arguments);
 
          this.tiles = [];
-         this.coins = [];
          this.spawns = {
             player: [],
             powerup: [],
-            coin: []
+            coin: [],
+            all: []
          };
       },
 
@@ -142,7 +142,8 @@ define([
          this.spawns = {
             player: [],
             coin: [],
-            powerup: []
+            powerup: [],
+            all: []
          };
          for (var y = 0; y < canvas.height; y ++) {
             var row = [];
@@ -200,9 +201,11 @@ define([
                      break;
                   case COIN:
                      this.spawns.coin.push([x, this.tiles.length - 1 - z]);
+                     this.spawns.all.push([x, this.tiles.length - 1 - z, 'COIN']);
                      break;
                   case POWERUP:
                      this.spawns.powerup.push([x, this.tiles.length - 1 - z]);
+                     this.spawns.all.push([x, this.tiles.length - 1 - z, 'POWERUP']);
                      break;
                   case SPAWN:
                      this.spawns.player.push([x, this.tiles.length - 1 - z]);

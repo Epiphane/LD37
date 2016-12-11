@@ -127,7 +127,13 @@ define([
             return that.powerups.getSpawnData();
          });
 
-         this.roomba.body.ApplyLinearImpulse(new Box2D.b2Vec2(-0.01, -0.01), this.roomba.body.GetPosition());
+         this.canSpawn = false;
+         this.spawnTime = 5;
+         this.spawnDelay = 0;
+         Network.syncSpawnCallback(function() {
+            that.canSpawn = true;
+            that.spawnDelay = 0;
+         });
       },
 
       onSpawn: function(coin) {
@@ -163,9 +169,16 @@ define([
       update: function(dt, game) {
          var self = this;
 
+         if (this.canSpawn) {
+            this.spawnDelay -= dt;
+            if (this.spawnDelay <= 0) {
+               this.spawnDelay = this.spawnTime;
+               this.powerups.spawn(this.room);
+            }
+         }
+
          // Using 1/60 instead of dt because fixed-time calculations are more accurate
-         if (window.go)
-            this.world.Step(1/60, 1, 1);
+         this.world.Step(1/60, 1, 1);
 
          this.cameraMan.update(dt);
 
