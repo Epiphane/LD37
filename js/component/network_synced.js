@@ -14,7 +14,9 @@ define([
          this.entity.body.SetTransform(new Box2D.b2Vec2(data.position.x, data.position.y), this.entity.body.GetAngle());
          this.entity.body.SetLinearVelocity(new Box2D.b2Vec2(data.velocity.x, data.velocity.y));
 
-
+         // Get score, update hi-score table
+         window.scores[data.name] = data.score;
+         
       },
    });
 });

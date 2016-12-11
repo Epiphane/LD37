@@ -46,6 +46,7 @@ define([
 
       // Key = peerId, vaue = PeerJS connection object
       window.peers = {};
+      window.scores = {};
       // Array like:
       // [ {name: "Elliot", peerID: "asdf" } ]
       var serverPeerResult = [];
