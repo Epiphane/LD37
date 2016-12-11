@@ -279,6 +279,12 @@ define([
          });
       }
 
+      // window closed (note this isn't 100% reliable but for the jam should help us clean up
+      // some dead roombas)
+      window.onbeforeunload = function() {
+
+      }
+
       return {
          submitHandleCallback: submitHandle,
          broadcastRoombaState: broadcastRoombaState,
