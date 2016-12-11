@@ -34,6 +34,9 @@ define([
       },
 
       update: function(dt, game) {
+         if (this.entity.dead && !this.entity.falling)
+            return;
+
          var velocity = this.entity.body.GetLinearVelocity();
          var v_x = velocity.get_x();
          var v_y = velocity.get_y();

@@ -95,6 +95,9 @@ define([
                });
 
                hasSyncedSpawns = (data.length === 0);
+               console.log('No peers, im good');
+               if (hasSyncedSpawns && syncSpawnCallback)
+                  syncSpawnCallback();
             }
          });
       }

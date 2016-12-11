@@ -46,12 +46,21 @@ define([
       },
 
       beginContact: function(other) {
-         if (!this.visible)
+         if (!this.visible || this.parent.dead)
             return;
 
          // Using Roomba itself would create a circular dependency
          if (other instanceof this.parent.__proto__.constructor) {
-            other.weaponDeath();
+            if (other.blade.visible) {
+               // var rando = new Box2D.b2Vec2(Math.random() * 20, Math.random * 20);
+               // this.body.ApplyForce(rando, this.body.GetWorldCenter());
+
+               // rando = new Box2D.b2Vec2(Math.random() * 20, Math.random * 20);
+               // other.body.ApplyForce(rando, other.body.GetWorldCenter());
+            }
+            else {
+               other.weaponDeath();
+            }
          }
       },
 
