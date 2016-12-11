@@ -146,12 +146,13 @@ define([
          return text;
       }
 
-      function broadcastRoombaState(position) {
+      function broadcastRoombaState(position, velocity) {
          for (var handle in peers) {
             peers[handle].send({
                type: "UPDATE_OBJECT",
                name: myHandle,
-               position: position
+               position: position,
+               velocity: velocity
             });
          }
       }
