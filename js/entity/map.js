@@ -1,11 +1,13 @@
 define([
    'box2d',
    'entity/box2d_mesh',
-   'entity/roomba'
+   'entity/roomba',
+   'component/fallable'
 ], function(
    Box2D,
    Box2DMesh,
-   Roomba
+   Roomba,
+   Fallable
 ) {
    // TWEAK THESE
    var wallRadius = 0.5;
@@ -30,6 +32,8 @@ define([
        wallFixtureDef.set_shape(wallShape);
 
    var FallingTile = Box2DMesh.extend({
+      // components: [Fallable],
+
       geometry: tileGeometry,
       material: new THREE.MeshBasicMaterial({ color: 0xaaaaaa, map: texture }),
       bodyDef: {

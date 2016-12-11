@@ -45,11 +45,17 @@ define([
       },
 
       beginContact: function(other) {
+         if (other instanceof Roomba)
+            return;
+
          // Let other object define behavior?
          other.beginContact(this);
       },
 
       endContact: function(other) {
+         if (other instanceof Roomba)
+            return;
+         
          // Let other object define behavior?
          other.endContact(this);
       },
