@@ -1,7 +1,9 @@
 define([
    'box2d',
+   'helper/box2d'
 ], function(
-   Box2D
+   Box2D,
+   Box2DHelper
 ) {
    // DEFINITION
    var Box2DMesh = Juicy.Mesh.extend({
@@ -18,12 +20,24 @@ define([
 
          Juicy.Mesh.call(this, geometry, material, components);
 
+         if (!(bodyDef instanceof Box2D.b2BodyDef)) {
+            bodyDef = Box2DHelper.createBodyDef(bodyDef);
+         }
+         if (!(fixtureDef instanceof Box2D.b2FixtureDef)) {
+            fixtureDef = Box2DHelper.createFixtureDef(fixtureDef);
+         }
+
          // Initialize Box2D component
          this.body = world.CreateBody(bodyDef);
          this.body.CreateFixture(fixtureDef);
          this.body.SetUserData(this.id);
 
          this.shouldRemove = false;
+      },
+
+      setPosition: function(x, y, z) {
+         this.body.SetTransform(new Box2D.b2Vec2(-z, x), 0);
+         this.position.set(x, y, z);
       },
 
       beginContact: function(other) {

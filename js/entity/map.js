@@ -1,17 +1,24 @@
 define([
    'box2d',
+   'entity/box2d_mesh',
+   'entity/roomba'
 ], function(
-   Box2D
+   Box2D,
+   Box2DMesh,
+   Roomba
 ) {
    // TWEAK THESE
    var wallRadius = 0.5;
 
    // Load texture
+   var tileGeometry = new THREE.BoxGeometry(1, 1, 1);
+   var wallGeometry = new THREE.BoxGeometry(1, 4, 1);
    var texture = new THREE.TextureLoader().load('textures/square-outline-textured.png');
    var material = new THREE.MeshBasicMaterial({ color: 0xffffff, map: texture });
 
-   var FLOOR = 0,
-       WALL  = 1;
+   var FLOOR   = 0,
+       WALL    = 1,
+       FALLING = 2;
 
    // BOX2D
    var wallBodyDef = new Box2D.b2BodyDef();
@@ -21,6 +28,58 @@ define([
    var wallFixtureDef = new Box2D.b2FixtureDef();
        wallFixtureDef.set_density(0.0);
        wallFixtureDef.set_shape(wallShape);
+
+   var FallingTile = Box2DMesh.extend({
+      geometry: tileGeometry,
+      material: new THREE.MeshBasicMaterial({ color: 0xaaaaaa, map: texture }),
+      bodyDef: {
+         type: Box2D.b2_kinematicBody
+      },
+      fixtureDef: {
+         density: 0.0,
+         isSensor: true,
+         shape: {
+            type: 'box',
+            args: [wallRadius, wallRadius]
+         }
+      },
+
+      constructor: function() {
+         Box2DMesh.apply(this, arguments);
+
+         this.shaking = false;
+         this.falling = false;
+         this.respawn = 0;
+         this.t = 0;
+      },
+
+      beginContact: function(other) {
+         if (!(other instanceof Roomba) || this.respawn) {
+            return;
+         }
+
+         this.shaking = true;
+         this.t = 0;
+      },
+
+      endContact: function(other) {
+         if (this.shaking) {
+            this.falling = true;
+            this.shaking = false;
+            this.t = 0;
+            this.respawn = 1;
+         }
+      },
+
+      update: function(dt, game) {
+         Box2DMesh.prototype.update.apply(this, arguments);
+
+         if (this.shaking) {
+            this.t += dt;
+            this.position.z += Math.sin(this.t * 30) / 10;
+         }
+      }
+   });
 
    var Map = Juicy.Entity.extend({
       constructor: function() {
@@ -48,6 +107,9 @@ define([
                // Black = WALL
                if (r === 0 && g === 0 && b === 0) {
                   type = WALL;
+               }
+               if (r === 255 && g === 0 && b === 0) {
+                  type = FALLING;
                }
 
                row.push(type);
@@ -94,8 +156,6 @@ define([
 
       populateTiles: function(world) {
          var tilesize = 2;
-         var tileGeometry = new THREE.BoxGeometry(1, 1, 1);
-         var wallGeometry = new THREE.BoxGeometry(1, 4, 1);
 
          this.tiles.forEach(function(row, x) {
             row.forEach(function(tile, z) {
@@ -104,20 +164,22 @@ define([
                switch (tile) {
                   case FLOOR:
                      var tileObj = new THREE.Mesh(tileGeometry, material);
-                         tileObj.position.y = -0.5;
+                         tileObj.position.set(x, -0.5, z);
                      break;
                   case WALL:
                      var tileObj = new THREE.Mesh(wallGeometry, material);
-                         tileObj.position.y = 2;
+                         tileObj.position.set(x, 2, z);
 
                      wallBodyDef.set_position(new Box2D.b2Vec2(-z, x));
                      var wall = world.CreateBody(wallBodyDef);
                          wall.CreateFixture(wallFixtureDef);
                      break;
+                  case FALLING:
+                     var tileObj = new FallingTile(world);
+                         tileObj.setPosition(x, -0.5, z);
+                     break;
                }
    
-               tileObj.position.x = x;
-               tileObj.position.z = z;
                this.add(tileObj);
             }.bind(this));
          }.bind(this));
@@ -157,6 +219,14 @@ define([
 
       isBlocking: function(position) {
          return this.getTile(position) === WALL;
+      },
+
+      update: function(dt, game) {
+         this.children.forEach(function(child) {
+            if (child.update) {
+               child.update(dt, game);
+            }
+         });
       }
    });
 
