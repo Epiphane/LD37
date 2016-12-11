@@ -1,158 +1,132 @@
 <!DOCTYPE html>
 <html>
-   <head>
-      <meta charset=utf-8>
-      <title>Ludum Dare 27</title>
-      <link rel="icon" type="image/png" href="favicon.ico">
-      <style>
-         body {
-            margin: 0;
-            background: grey;
-         }
-         canvas { width: 100%; height: 100%; margin: 0 auto; }
-         #game {
-            text-align: center;
-         }
+<head>
+   <meta charset=utf-8>
+   <title>Ludum Dare 27</title>
+   <link rel="icon" type="image/png" href="favicon.ico">
+   <style>
+   body {
+      margin: 0;
+      background: grey;
+   }
+   canvas { width: 100%; height: 100%; margin: 0 auto; }
+   #game {
+      text-align: center;
+   }
 
-         #report-bug {
-            background: black;
-            position: absolute;
-            top: 0;
-            left: 0;
-            border: 2px solid white;
-            padding: 5px;
-            border-radius: 0 0 5px 0;
-         }
+   #report-bug {
+      background: black;
+      position: absolute;
+      top: 0;
+      left: 0;
+      border: 2px solid white;
+      padding: 5px;
+      border-radius: 0 0 5px 0;
+   }
 
-         #fullscreen {
-            background: black;
-            position: absolute;
-            top: 0;
-            right: 0;
-            border: 2px solid white;
-            padding: 5px;
-            border-radius: 0 0 0 5px;
-         }
+   #fullscreen {
+      background: black;
+      position: absolute;
+      top: 0;
+      right: 0;
+      border: 2px solid white;
+      padding: 5px;
+      border-radius: 0 0 0 5px;
+   }
 
-         .container {
-            width: 694px;
-            margin: 0 auto;
-            background: #666;
-         }
+   .container {
+      width: 694px;
+      margin: 0 auto;
+      background: #666;
+   }
 
-         .container img {
-            text-align: center;
-            margin: 0 auto;
-         }
-      </style>
-   </head>
-   <body>
-      <div id="container-fluid">
-         <div id="row">
-            <div id="game" style="position: relative;" class="col-md-6"></div>
+   .container img {
+      text-align: center;
+      margin: 0 auto;
+   }
+   </style>
+</head>
+<body>
+   <div id="container-fluid">
+      <div id="row">
+         <div id="game" style="position: relative;" class="col-md-6"></div>
 
-            <div class="col-md-2 col-md-offset-4">
-               <table class="table table-condensed">
-                  <tr>
-                     <th>Place</th>
-                     <th>Name</th>
-                     <th>Pts</th>
-                  </tr>
-                  <tr id="1-place" style="display:none;" class="success">
-                     <td>1</td>
-                     <td id="1-place-name">Elliot really long name designed to break things</td>
-                     <td id="1-place-score">0</td>
-                  </tr>
-                  <tr id="2-place" style="display:none;" class="active">
-                     <td>2</td>
-                     <td id="2-place-name">Thomas</td>
-                     <td id="2-place-score">0</td>
-                  </tr>
-                  <tr id="3-place" style="display:none;" class="warning">
-                     <td>3</td>
-                     <td id="3-place-name">Francis</td>
-                     <td id="3-place-score">0</td>
-                  </tr>
-                  <tr id="4-place" style="display:none;">
-                     <td>4</td>
-                     <td id="4-place-name">Francis</td>
-                     <td id="4-place-score">0</td>
-                  </tr>
-                  <tr id="5-place" style="display:none;">
-                     <td>5</td>
-                     <td id="5-place-name">Francis</td>
-                     <td id="5-place-score">0</td>
-                  </tr>
-                  <tr id="6-place" style="display:none;">
-                     <td>6</td>
-                     <td id="6-place-name">Francis</td>
-                     <td id="6-place-score">0</td>
-                  </tr>
-                  <tr id="7-place" style="display:none;">
-                     <td>7</td>
-                     <td id="7-place-name">Francis</td>
-                     <td id="7-place-score">0</td>
-                  </tr>
-                  <tr id="8-place" style="display:none;">
-                     <td>8</td>
-                     <td id="8-place-name">Francis</td>
-                     <td id="8-place-score">0</td>
-                  </tr>
-                  <tr id="9-place" style="display:none;">
-                     <td>9</td>
-                     <td id="9-place-name">Francis</td>
-                     <td id="9-place-score">0</td>
-                  </tr>
-                  <tr id="10-place" style="display:none;">
-                     <td>10</td>
-                     <td id="10-place-name">Francis</td>
-                     <td id="10-place-score">0</td>
-                  </tr>
-               </table>
-            </div>
+         <div class="col-md-2 col-md-offset-4">
+            <table class="table table-condensed">
+               <tr>
+                  <th>Place</th>
+                  <th>Name</th>
+                  <th>Pts</th>
+               </tr>
+               <tr id="1-place" style="display:none;" class="success">
+                  <td>1</td>
+                  <td id="1-place-name">Elliot really long name designed to break things</td>
+                  <td id="1-place-score">0</td>
+               </tr>
+               <tr id="2-place" style="display:none;" class="active">
+                  <td>2</td>
+                  <td id="2-place-name">Thomas</td>
+                  <td id="2-place-score">0</td>
+               </tr>
+               <tr id="3-place" style="display:none;" class="warning">
+                  <td>3</td>
+                  <td id="3-place-name">Francis</td>
+                  <td id="3-place-score">0</td>
+               </tr>
+               <tr id="4-place" style="display:none;">
+                  <td>4</td>
+                  <td id="4-place-name">Francis</td>
+                  <td id="4-place-score">0</td>
+               </tr>
+               <tr id="5-place" style="display:none;">
+                  <td>5</td>
+                  <td id="5-place-name">Francis</td>
+                  <td id="5-place-score">0</td>
+               </tr>
+               <tr id="6-place" style="display:none;">
+                  <td>6</td>
+                  <td id="6-place-name">Francis</td>
+                  <td id="6-place-score">0</td>
+               </tr>
+               <tr id="7-place" style="display:none;">
+                  <td>7</td>
+                  <td id="7-place-name">Francis</td>
+                  <td id="7-place-score">0</td>
+               </tr>
+               <tr id="8-place" style="display:none;">
+                  <td>8</td>
+                  <td id="8-place-name">Francis</td>
+                  <td id="8-place-score">0</td>
+               </tr>
+               <tr id="9-place" style="display:none;">
+                  <td>9</td>
+                  <td id="9-place-name">Francis</td>
+                  <td id="9-place-score">0</td>
+               </tr>
+               <tr id="10-place" style="display:none;">
+                  <td>10</td>
+                  <td id="10-place-name">Francis</td>
+                  <td id="10-place-score">0</td>
+               </tr>
+            </table>
+         </div>
 
-            <!-- <div class="col-lg-5">
-               <div class="panel panel-primary">
-                  <div class="panel-heading">
-                     <span class="glyphicon glyphicon-comment"></span> Chat
-                  </div>
-                  <div class="panel-body">
-                     <ul class="chat">
-                        <li class="left clearfix"><span class="chat-img pull-left">
-                           <img src="http://placehold.it/50/55C1E7/fff&text=U" alt="User Avatar" class="img-circle" />
-                        </span>
-                        <div class="chat-body clearfix">
-                           <div class="header">
-                              <strong class="primary-font">Jack Sparrow</strong> <small class="pull-right text-muted">
-                                 <span class="glyphicon glyphicon-time"></span>12 mins ago</small>
-                              </div>
-                              <p>
-                                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare
-                                 dolor, quis ullamcorper ligula sodales.
-                              </p>
-                           </div>
-                        </li>
-                        <li class="right clearfix"><span class="chat-img pull-right">
-                           <img src="http://placehold.it/50/FA6F57/fff&text=ME" alt="User Avatar" class="img-circle" />
-                        </span>
-                        <div class="chat-body clearfix">
-                           <div class="header">
-                              <small class=" text-muted"><span class="glyphicon glyphicon-time"></span>13 mins ago</small>
-                              <strong class="pull-right primary-font">Bhaumik Patel</strong>
-                           </div>
-                           <p>
-                              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare
-                              dolor, quis ullamcorper ligula sodales.
-                           </p>
-                        </div>
-                     </li>
+      </div>
+      <!-- <div class="row">
+         <div class="col-lg-5">
+            <div class="panel panel-primary">
+               <div class="panel-heading">
+                  <span class="glyphicon glyphicon-comment"></span> Chat
+               </div>
+               <div class="panel-body">
+                  <ul class="chat">
                      <li class="left clearfix"><span class="chat-img pull-left">
                         <img src="http://placehold.it/50/55C1E7/fff&text=U" alt="User Avatar" class="img-circle" />
                      </span>
                      <div class="chat-body clearfix">
                         <div class="header">
                            <strong class="primary-font">Jack Sparrow</strong> <small class="pull-right text-muted">
-                              <span class="glyphicon glyphicon-time"></span>14 mins ago</small>
+                              <span class="glyphicon glyphicon-time"></span>12 mins ago</small>
                            </div>
                            <p>
                               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare
@@ -165,7 +139,7 @@
                      </span>
                      <div class="chat-body clearfix">
                         <div class="header">
-                           <small class=" text-muted"><span class="glyphicon glyphicon-time"></span>15 mins ago</small>
+                           <small class=" text-muted"><span class="glyphicon glyphicon-time"></span>13 mins ago</small>
                            <strong class="pull-right primary-font">Bhaumik Patel</strong>
                         </div>
                         <p>
@@ -174,63 +148,91 @@
                         </p>
                      </div>
                   </li>
-               </ul>
-            </div>
-            <div class="panel-footer">
-               <div class="input-group">
-                  <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." />
-                  <span class="input-group-btn">   
-                     <button class="btn btn-warning btn-sm" id="btn-chat">
-                        Send</button>
-                     </span>
+                  <li class="left clearfix"><span class="chat-img pull-left">
+                     <img src="http://placehold.it/50/55C1E7/fff&text=U" alt="User Avatar" class="img-circle" />
+                  </span>
+                  <div class="chat-body clearfix">
+                     <div class="header">
+                        <strong class="primary-font">Jack Sparrow</strong> <small class="pull-right text-muted">
+                           <span class="glyphicon glyphicon-time"></span>14 mins ago</small>
+                        </div>
+                        <p>
+                           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare
+                           dolor, quis ullamcorper ligula sodales.
+                        </p>
+                     </div>
+                  </li>
+                  <li class="right clearfix"><span class="chat-img pull-right">
+                     <img src="http://placehold.it/50/FA6F57/fff&text=ME" alt="User Avatar" class="img-circle" />
+                  </span>
+                  <div class="chat-body clearfix">
+                     <div class="header">
+                        <small class=" text-muted"><span class="glyphicon glyphicon-time"></span>15 mins ago</small>
+                        <strong class="pull-right primary-font">Bhaumik Patel</strong>
+                     </div>
+                     <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare
+                        dolor, quis ullamcorper ligula sodales.
+                     </p>
                   </div>
-               </div>
-            </div>-->
+               </li>
+            </ul>
          </div>
-      </div>
-      </div>
-
-      <script src="lib/jquery-3.1.0.min.js"></script>
-      <script src="lib/chance.min.js"></script>
-      <script src="lib/three.js"></script>
-      <script src="lib/OBJLoader.js"></script>
-      <script src="lib/MTLLoader.js"></script>
-      <script src="lib/juicy.three.js"></script>
-      <script src="lib/require.js"></script>
-      <script src="lib/peer.js"></script>
-
-      <script src="js/main.js"></script>
-
-      <!-- SPOOKY DOOT DOOT STRAP -->
-      <!-- Latest compiled and minified CSS -->
-      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
-      <!-- Optional theme -->
-      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-
-      <!-- Latest compiled and minified JavaScript -->
-      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-
-      <link rel="stylesheet" href="chat.css">
-
-      <!-- Name enter modal! -->
-      <div class="modal fade" id="myModal" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static">
-         <div class="modal-dialog" role="document">
-            <div class="modal-content">
-               <div class="modal-header">
-                  <h4 class="modal-title" id="myModalLabel">Make a name for yourself!</h4>
-               </div>
-               <div class="modal-body">
-                  <form id="html-sux" class="form-horizontal">
-                     <label id="be-more-clever" style="display: none; font-size: 12px;" for="fart">Somebody's already chosen that name. Be more original! 😂</label>
-                     <input id="fart" class="form-control" name="handle" type="text" placeholder="What's your name, friend?"></input>
-                     <br />
-                     <button type="Submit" class="btn btn-primary">Submit!</button>
-                  </form>
+         <div class="panel-footer">
+            <div class="input-group">
+               <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." />
+               <span class="input-group-btn">
+                  <button class="btn btn-warning btn-sm" id="btn-chat">
+                     Send</button>
+                  </span>
                </div>
             </div>
          </div>
       </div>
+   </div> -->
+</div>
 
-   </body>
+<script src="lib/jquery-3.1.0.min.js"></script>
+<script src="lib/chance.min.js"></script>
+<script src="lib/three.js"></script>
+<script src="lib/OBJLoader.js"></script>
+<script src="lib/MTLLoader.js"></script>
+<script src="lib/juicy.three.js"></script>
+<script src="lib/require.js"></script>
+<script src="lib/peer.js"></script>
+
+<script src="js/main.js"></script>
+
+<!-- SPOOKY DOOT DOOT STRAP -->
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+<link rel="stylesheet" href="chat.css">
+
+<!-- Name enter modal! -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" data-keyboard="false" data-backdrop="static">
+   <div class="modal-dialog" role="document">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h4 class="modal-title" id="myModalLabel">Make a name for yourself!</h4>
+         </div>
+         <div class="modal-body">
+            <form id="html-sux" class="form-horizontal">
+               <label id="be-more-clever" style="display: none; font-size: 12px;" for="fart">Somebody's already chosen that name. Be more original! 😂</label>
+               <input id="fart" class="form-control" name="handle" type="text" placeholder="What's your name, friend?"></input>
+               <br />
+               <button type="Submit" class="btn btn-primary">Submit!</button>
+            </form>
+         </div>
+      </div>
+   </div>
+</div>
+
+</body>
 </html>

@@ -8,7 +8,7 @@ define([
       // var API_URL = "http://localhost:3000/";
 
       var myId = "";
-      var myHandle = "";
+      window.myHandle = "";
 
       var peerAPI = new Peer({key: 'is1zfbruud31sjor'});
 
@@ -55,7 +55,7 @@ define([
       // Helper function to make an AJAX call and connect to existing players
       function getCurrentPlayers(post_result_data) {
          // GET all current friends
-         myHandle = post_result_data;
+         window.myHandle = post_result_data;
          jQuery("#myModal").modal('hide');
          jQuery.ajax(API_URL + "peer", {
             success: function(data) {
@@ -77,7 +77,7 @@ define([
       function submitHandle(evt) {
          evt.preventDefault();
 
-         myHandle = jQuery('form').serializeArray()[0]["value"];
+         window.myHandle = jQuery('form').serializeArray()[0]["value"];
 
          if (myId === "") {
             // I made a race condition. If the peerJS server doesn't respond in
@@ -88,7 +88,7 @@ define([
 
          // POST my new peer id
          jQuery.ajax({
-            url: API_URL + 'peer/id/' + myId + '/name/' + myHandle,
+            url: API_URL + 'peer/id/' + myId + '/name/' + window.myHandle,
             error: function(jqXHR, textStatus, errorThrown) {
                // un-unique handle :I
                console.warn("Oh no! Trouble telling the server about my new id " + JSON.stringify(textStatus));
@@ -162,7 +162,7 @@ define([
          for (var handle in peers) {
             peers[handle].send({
                type: "UPDATE_OBJECT",
-               name: myHandle,
+               name: window.myHandle,
                position: position,
                velocity: velocity,
                score: score
@@ -185,7 +185,7 @@ define([
          for (var handle in peers) {
             peers[handle].send({
                type: "SPAWN",
-               name: myHandle,
+               name: window.myHandle,
                position: {x: position.x, y: position.y},
                respawn: timer
             });
@@ -202,7 +202,7 @@ define([
 
          peers[tribute].send({
             type: 'REQUEST_SPAWNS',
-            name: myHandle
+            name: window.myHandle
          });
       }
 

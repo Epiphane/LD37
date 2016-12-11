@@ -64,6 +64,7 @@ define([
          this.setRespawn(10 + Math.random() * 5);
          this.onDespawn(this);
          other.score ++;
+         window.scores[window.myHandle] = other.score;
       },
 
       endContact: function(other) {
