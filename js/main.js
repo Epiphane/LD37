@@ -74,10 +74,10 @@ setInterval(function() {
    });
 
    for (var i = 1; i <= 10; i++) {
-      if (i < scoresSorted.length) {
+      if (i <= scoresSorted.length) {
          jQuery("#" + i + "-place").show(0);
-         jQuery("#" + i + "-place-name").html(scoresSorted[i].name);
-         jQuery("#" + i + "-place-score").html(scoresSorted[i].score);
+         jQuery("#" + i + "-place-name").html(scoresSorted[i - 1].name);
+         jQuery("#" + i + "-place-score").html(scoresSorted[i - 1].score);
       }
       else {
          jQuery("#" + i + "-place").hide(0);
