@@ -56,7 +56,7 @@ define([
          // Lighting for OBJ files
          var ambient = new THREE.AmbientLight(0xffffff);
          this.scene.add(ambient);
-         
+
          var directionalLight = new THREE.DirectionalLight(0xffeedd);
              directionalLight.position.set(0, 0, 1).normalize();
          this.scene.add(directionalLight);
@@ -75,8 +75,8 @@ define([
          // Room
          this.room = new Map();
          this.scene.add(this.room);
-         onReady = function(mapCanvas) { 
-            this.ready = true; 
+         onReady = function(mapCanvas) {
+            this.ready = true;
 
             this.room.loadImage(mapCanvas, this.world);
          }.bind(this);
@@ -100,7 +100,7 @@ define([
             return networkedRoomba.getComponent('NetworkedRoomba');
          });
          this.roomba.body.ApplyLinearImpulse(new Box2D.b2Vec2(-0.01, -0.01), this.roomba.body.GetPosition());
-      
+
          // Populate room with one powerup
          this.powerup = new Powerup(this.world);
          this.scene.add(this.powerup);
@@ -143,7 +143,7 @@ define([
 
          this.broadcastTick--
          if (this.broadcastTick === 0) {
-            this.broadcastTick = 2;
+            this.broadcastTick = 1;
             var posn = this.roomba.body.GetPosition();
             var velc = this.roomba.body.GetLinearVelocity();
             Network.broadcastRoombaState(
