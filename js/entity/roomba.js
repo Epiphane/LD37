@@ -35,7 +35,7 @@ define([
 
    // DEFINITION
    var Roomba = Box2DMesh.extend({
-      constructor: function(components, world) {
+      constructor: function(components, world, room) {
          components.unshift(OBJMesh);
          components.unshift(Fallable);
 
@@ -49,6 +49,7 @@ define([
          this.feet = {};
          this.respawnTimer = 0;
          this.dead = false;
+         this.room = room;
       },
 
       beginContact: function(other) {
@@ -71,6 +72,11 @@ define([
          this.dead = false;
          this.respawnTimer = 0;
          this.getComponent('Fallable').reset();
+
+         var spawns = this.room.spawns.player;
+         var spawn = spawns[Math.floor(Math.random() * spawns.length)];
+
+         this.setPosition(spawn[0], this.position.y, spawn[1]);
       },
 
       die: function() {

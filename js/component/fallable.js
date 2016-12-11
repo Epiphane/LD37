@@ -18,6 +18,9 @@ define([], function() {
       },
 
       reset: function() {
+         if (!this.falling)
+            return;
+
          this.falling = false;
          this.t = 0;
 

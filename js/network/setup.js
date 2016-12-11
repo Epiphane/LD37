@@ -13,6 +13,7 @@ define([
       var peerAPI = new Peer({key: 'is1zfbruud31sjor'});
 
       var newRoombaCallback = null;
+      var updateCoinCallback = null;
 
       // Keeps track of the stuff that syncs across the network.
       // For roombas, the key is the user's handle and the value is
@@ -131,7 +132,17 @@ define([
          });
 
          new_connection.on('data', function(data) {
-            networkSyncedEntities[data.name.toLowerCase()].networkUpdate(data);
+            switch(data.type) {
+               case 'UPDATE_OBJECT':
+                  networkSyncedEntities[data.name.toLowerCase()].networkUpdate(data);
+                  break;
+               case 'SPAWN':
+                  if (updateCoinCallback)
+                     updateCoinCallback(data);
+                  break;
+               case 'REQUEST_SPAWNS':
+                  break;
+            }
          });
       }
 
@@ -157,11 +168,52 @@ define([
          }
       }
 
+      // function broadcastSpawn(type, position) {
+      //    for (var handle in peers) {
+      //       peers[handle].send({
+      //          type: "SPAWN",
+      //          name: myHandle,
+      //          position: position,
+      //          type: type
+      //       });
+      //    }
+      // }
+
+      function broadcastSpawnTimer(position, timer) {
+         for (var handle in peers) {
+            peers[handle].send({
+               type: "SPAWN",
+               name: myHandle,
+               position: {x: position.x, y: position.y},
+               respawn: timer
+            });
+         }
+      }
+
+      function requestSpawnTimers(callback) {
+         var handles = Object.keys(peers);
+         if (handles.length === 0) {
+            return;
+         }
+
+         var tribute = handles[Math.floor(Math.random() * handles.length)];
+
+         peers[tribute].send({
+            type: 'REQUEST_SPAWNS',
+            name: myHandle
+         });
+      }
+
       return {
          submitHandleCallback: submitHandle,
          broadcastRoombaState: broadcastRoombaState,
+         broadcastSpawnTimer: broadcastSpawnTimer,
+         requestSpawnTimers: requestSpawnTimers,
          newRoombaCallback: function(callback) {
             newRoombaCallback = callback;
+         },
+         updateCoinCallback: function(callback) {
+            updateCoinCallback = callback;
          }
       }
    })();

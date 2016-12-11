@@ -2,11 +2,13 @@ define([
    'box2d',
    'entity/box2d_mesh',
    'entity/roomba',
+   'entity/powerup',
    'component/fallable'
 ], function(
    Box2D,
    Box2DMesh,
    Roomba,
+   Powerup,
    Fallable
 ) {
    // TWEAK THESE
@@ -18,9 +20,15 @@ define([
    var texture = new THREE.TextureLoader().load('textures/square-outline-textured.png');
    var material = new THREE.MeshBasicMaterial({ color: 0xffffff, map: texture });
 
-   var FLOOR   = 0,
-       WALL    = 1,
-       FALLING = 2;
+   // R
+   var WALL    = 0,
+       FALLING = 128,
+       FLOOR   = 255;
+   // G
+   var NOTHING = 0,
+       COIN    = 64,
+       POWERUP = 128,
+       SPAWN   = 255;
 
    // BOX2D
    var wallBodyDef = new Box2D.b2BodyDef();
@@ -119,12 +127,22 @@ define([
          Juicy.Entity.apply(this, arguments);
 
          this.tiles = [];
+         this.coins = [];
+         this.spawns = {
+            player: [],
+            powerup: []
+         };
       },
 
       loadImage: function(canvas, world) {
          var imageData = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height).data;
 
          this.tiles = [];
+         this.spawns = {
+            player: [],
+            coin: [],
+            powerup: []
+         };
          for (var y = 0; y < canvas.height; y ++) {
             var row = [];
 
@@ -135,54 +153,15 @@ define([
                    b = imageData[ndx + 2],
                    a = imageData[ndx + 3];
 
-               var type = FLOOR;
+               var type = r;
+               var flag = g;
 
                // Black = WALL
-               if (r === 0 && g === 0 && b === 0) {
-                  type = WALL;
-               }
-               if (r === 255 && g === 0 && b === 0) {
-                  type = FALLING;
-               }
-
-               row.push(type);
+               row.push([type, flag, 0]);
             }
 
             this.tiles.push(row);
          }
-
-         this.populateTiles(world);
-      },
-
-      load: function(layout, world) {
-         this.tiles = [];
-         layout.forEach(function(row, x_2) {
-            var row_1 = [];
-            var row_2 = [];
-
-            for (var z = 0; z < row.length; z ++) {
-               var top = FLOOR, bottom = FLOOR;
-               switch(row[z]) {
-                  case ' ':
-                     break;
-                  case '_':
-                     bottom = WALL;
-                     break;
-                  case '=':
-                  case '|':
-                     bottom = WALL;
-                  case '-':
-                     top = WALL;
-                     break;
-               }
-
-               row_1.unshift(top);
-               row_2.unshift(bottom);
-            }
-
-            this.tiles.push(row_1);
-            this.tiles.push(row_2);
-         }.bind(this));
 
          this.populateTiles(world);
       },
@@ -194,7 +173,8 @@ define([
             row.forEach(function(tile, z) {
                var tileObj;
 
-               switch (tile) {
+               // Tile type
+               switch (tile[0]) {
                   case FLOOR:
                      var tileObj = new THREE.Mesh(tileGeometry, material);
                          tileObj.position.set(x, -0.5, z);
@@ -212,10 +192,35 @@ define([
                          tileObj.setPosition(x, -0.5, z);
                      break;
                }
+
+               // Tile flag
+               switch (tile[1]) {
+                  case NOTHING:
+                     break;
+                  case COIN:
+                     var coin = new Powerup(world);
+                         coin.setPosition(x, coin.position.y, this.tiles.length - z);
+
+                     this.coins.push(coin);
+                     this.add(coin);
+                     break;
+                  case POWERUP:
+                     this.spawns.powerup.push([x, this.tiles.length - z]);
+                     break;
+                  case SPAWN:
+                     this.spawns.player.push([x, this.tiles.length - z]);
+                     break;
+               }
    
                this.add(tileObj);
             }.bind(this));
          }.bind(this));
+      },
+
+      getCoinAt: function(x, z) {
+         return this.coins.find(function(coin) {
+            return coin.position.x === x && coin.position.z === z;
+         });
       },
 
       clampCamera: function(position) {

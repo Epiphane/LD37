@@ -21,7 +21,6 @@ define([
    // BOX2D
    var powerupBodyDef = new Box2D.b2BodyDef();
        powerupBodyDef.set_type(Box2D.b2_dynamicBody);
-       powerupBodyDef.set_position(new Box2D.b2Vec2(-8, 8));
    var powerupShape = new Box2D.b2CircleShape();
        powerupShape.set_m_radius(powerupRadius);;
    var powerupFixtureDef = new Box2D.b2FixtureDef();
@@ -36,16 +35,34 @@ define([
 
          this.position.y = 0.5 + powerupHeight / 2;
          this.rotation.x = Math.PI / 2;
+
+         this.visible = true;
+         this.respawnTimer = 0;
+
+         this.onRespawn = function() {};
+         this.onDespawn = function() {};
+      },
+
+      setType: function(type) {
+         console.log(type);
+      },
+
+      setRespawn: function(value) {
+         this.respawnTimer = value;
+         this.visible = (value === 0);
       },
 
       beginContact: function(other) {
+         if (!this.visible)
+            return;
+
          // Only collide with Roombas
          if (!(other instanceof Roomba)) {
             return;
          }
 
-         console.log('V R R O O M M B A A');
-         this.shouldRemove = true;
+         this.setRespawn(10 + Math.random() * 5);
+         this.onDespawn(this);
       },
 
       endContact: function(other) {
@@ -55,6 +72,15 @@ define([
          Box2DMesh.prototype.update.apply(this, arguments);
 
          this.rotation.z += dt;
+
+         if (!this.visible) {
+            this.respawnTimer -= dt;
+
+            if (this.respawnTimer <= 0) {
+               this.setRespawn(0);
+               this.onRespawn(this);
+            }
+         }
       },
 
       bodyDef: powerupBodyDef,

@@ -79,14 +79,26 @@ define([
             this.ready = true;
 
             this.room.loadImage(mapCanvas, this.world);
+            this.roomba.respawn();
+
+            var onRespawn = this.onCoinRespawn.bind(this);
+            var onDespawn = this.onCoinDespawn.bind(this);
+            this.room.coins.forEach(function(coin) {
+               coin.onRespawn = onRespawn;
+               coin.onDespawn = onDespawn;
+            });
+
+            Network.requestSpawnTimers(function(data) {
+               this.updateCoinSpawns(data);
+            });
          }.bind(this);
 
          // Roomba 1
-         this.roomba = new Roomba([RoombaInput], this.world);
+         this.roomba = new Roomba([RoombaInput], this.world, this.room);
          this.scene.add(this.roomba);
 
          // Camera magic
-         this.cameraMan.follow(this.roomba, new THREE.Vector3(0, 15, 0));
+         this.cameraMan.follow(this.roomba, new THREE.Vector3(0, 20, 0));
          this.angle = Math.PI / 2;
 
          var that = this;
@@ -101,9 +113,36 @@ define([
          });
          this.roomba.body.ApplyLinearImpulse(new Box2D.b2Vec2(-0.01, -0.01), this.roomba.body.GetPosition());
 
-         // Populate room with one powerup
-         this.powerup = new Powerup(this.world);
-         this.scene.add(this.powerup);
+         Network.updateCoinCallback(function(data) {
+            var coin = that.room.getCoinAt(data.position.x, data.position.y);
+            if (coin) {
+               coin.setRespawn(data.respawn);
+            }
+         });
+      },
+
+      onCoinRespawn: function(coin) {
+         console.log('respawn', coin);
+         Network.broadcastSpawnTimer(coin.position, coin.respawnTimer);
+      },
+
+      onCoinDespawn: function(coin) {
+         console.log('despawn', coin);
+         Network.broadcastSpawnTimer(coin.position, coin.respawnTimer);
+      },
+
+      updateCoinSpawns: function(data) {
+         this.room.coins.forEach(function(coin, i) {
+            coin.setRespawn(data[i]);
+         })
+      },
+
+      spawnPowerup: function(location, type) {
+         var spawned = new Powerup(this.world);
+             spawned.setPosition(location.x, spawned.position.y, location.z);
+             spawned.setType(type);
+
+         this.scene.add(spawned);
       },
 
       beginContact: function(contact, idA, idB) {
