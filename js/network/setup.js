@@ -13,6 +13,7 @@ define([
       var peerAPI = new Peer({key: 'is1zfbruud31sjor'});
 
       var newRoombaCallback = null;
+      var roombaDisconnectedCallback = null;
       var updateCoinCallback = null;
 
       // Keeps track of the stuff that syncs across the network.
@@ -68,6 +69,20 @@ define([
                      console.log("Found a new friend. His name is: " + newFriend.name);
                      new_connection_established(new_connection, newFriend.name);
                   });
+
+                  new_connection.on('error', function(err) {
+                     console.log("aha, an error for handle " + newFriend.name + " err " + JSON.stringify(err));
+                     jQuery.ajax({
+                        url: API_URL + 'peer/' + new_connection.peer,
+                        type: 'DELETE',
+                        success: function() {
+                           pruneDeadRoomba(handle);
+                        },
+                        error: function() {
+                           pruneDeadRoomba(handle);
+                        }
+                     });
+                  })
                });
             }
          });
@@ -128,12 +143,12 @@ define([
                url: API_URL + 'peer/' + new_connection.peer,
                type: 'DELETE',
                success: function() {
-                  delete peers[handle];
+                  pruneDeadRoomba(handle);
                },
                error: function() {
-                  delete peers[handle];
+                  pruneDeadRoomba(handle);
                }
-            })
+            });
          });
 
          new_connection.on('data', function(data) {
@@ -149,6 +164,21 @@ define([
                   break;
             }
          });
+
+         // somebody peacefully disconnected. END THEM.
+         new_connection.on('disconnected', function() {
+            pruneDeadRoomba(handle);
+         });
+         new_connection.on('close', function() {
+            pruneDeadRoomba(handle);
+         });
+      }
+
+      function pruneDeadRoomba(handle) {
+         if (peers[handle]) {
+            roombaDisconnectedCallback(peers[handle]);
+            delete peers[handle];
+         }
       }
 
       // Silly fallback in case we can't get our friend's name
@@ -202,6 +232,9 @@ define([
          requestSpawnTimers: requestSpawnTimers,
          newRoombaCallback: function(callback) {
             newRoombaCallback = callback;
+         },
+         roombaDisconnectedCallback: function(cb) {
+            roombaDisconnectedCallback = cb;
          },
          updateCoinCallback: function(callback) {
             updateCoinCallback = callback;

@@ -110,7 +110,13 @@ define([
             that.networkedRoombas.push(networkedRoomba);
             return networkedRoomba.getComponent('NetworkedRoomba');
          });
-         this.roomba.body.ApplyLinearImpulse(new Box2D.b2Vec2(-0.01, -0.01), this.roomba.body.GetPosition());
+
+         Network.roombaDisconnectedCallback(function(networkComponent) {
+            var dedRoomba = networkComponent.entity;
+            that.scene.remove(dedRoomba);
+            var ndx = that.networkedRoombas.indexOf(dedRoomba);
+            that.networkedRoombas.splice(ndx, 1);
+         });
 
          Network.updateCoinCallback(function(data) {
             var coin = that.room.getCoinAt(data.position.x, data.position.y);
@@ -118,6 +124,8 @@ define([
                coin.setRespawn(data.respawn);
             }
          });
+
+         this.roomba.body.ApplyLinearImpulse(new Box2D.b2Vec2(-0.01, -0.01), this.roomba.body.GetPosition());
       },
 
       onCoinRespawn: function(coin) {
