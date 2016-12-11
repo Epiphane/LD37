@@ -22,6 +22,8 @@ define([
          this.body = world.CreateBody(bodyDef);
          this.body.CreateFixture(fixtureDef);
          this.body.SetUserData(this.id);
+
+         this.remove = false;
       },
 
       beginContact: function(other) {

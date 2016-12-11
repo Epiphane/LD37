@@ -6,7 +6,7 @@ define([
    return Juicy.Component.create('OBJMesh', {
       constructor: function(entity) {
          Juicy.Component.call(this);
-         
+
          this.entity = entity;
       },
 
@@ -28,6 +28,11 @@ define([
                self.onReady();
             });
          });
+      },
+
+      update: function(dt) {
+         this.rotation.y += 6 * dt;
+         this.entity.rotation.y -= 3 * dt;
       }
    });
 });
