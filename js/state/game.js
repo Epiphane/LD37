@@ -122,12 +122,10 @@ define([
       },
 
       onCoinRespawn: function(coin) {
-         console.log('respawn', coin);
          Network.broadcastSpawnTimer(coin.position, coin.respawnTimer);
       },
 
       onCoinDespawn: function(coin) {
-         console.log('despawn', coin);
          Network.broadcastSpawnTimer(coin.position, coin.respawnTimer);
       },
 
