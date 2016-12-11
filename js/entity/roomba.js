@@ -92,6 +92,10 @@ define([
          this.getComponent('Killable').reset();
          this.blade.visible = false;
 
+         var amountToLose = Math.min(5, window.scores[window.myHandle]);
+         window.scores[window.myHandle] -= amountToLose;
+         updateHighScores();
+
          if (!this.room) {
             console.error('Why is my room null? Who has done such a thing?');
             return null;
