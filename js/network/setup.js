@@ -34,7 +34,7 @@ define([
          myId = id;
 
          if (delayedModalSubmit)
-            delayedModalSubmit();
+         delayedModalSubmit();
       });
 
       // Listens for NEW PEOPLE connecting TO me
@@ -132,9 +132,9 @@ define([
       }
 
       /** We have a new friend!
-          Note that this can either be called by people connecting TO me via
-          this.peerAPI.on('connection') OR when I connect to people myself
-          via this.peerAPI.connect
+      Note that this can either be called by people connecting TO me via
+      this.peerAPI.on('connection') OR when I connect to people myself
+      via this.peerAPI.connect
       */
       function new_connection_established(new_connection, handle) {
          // Figure out what their handle is and add them to peers
@@ -164,48 +164,49 @@ define([
          new_connection.on('data', function(data) {
             switch(data.type) {
                case 'UPDATE_OBJECT':
-                  networkSyncedEntities[data.name.toLowerCase()].networkUpdate(data);
-                  break;
+               networkSyncedEntities[data.name.toLowerCase()].networkUpdate(data);
+               break;
                case 'DESPAWN':
-                  despawnCallback(data);
-                  break;
+               despawnCallback(data);
+               break;
                case 'SPAWN':
                case 'SPAWNS':
-                  if (updateSpawnCallback)
-                     updateSpawnCallback(data);
-                  break;
+               if (updateSpawnCallback)
+               updateSpawnCallback(data);
+               break;
                case 'REQUEST_SPAWNS':
-                  if (requestSpawnCallback) {
-                     var spawnData = requestSpawnCallback();
+               if (requestSpawnCallback) {
+                  var spawnData = requestSpawnCallback();
 
-                     peers[data.name].send({
-                        type: 'SPAWNS',
-                        name: window.myHandle,
-                        data: spawnData
-                     });
-                     peers[data.name].send({
-                        type: 'SYNC_SPAWN',
-                        name: window.myHandle
-                     })
-                  }
-                  break;
+                  peers[data.name].send({
+                     type: 'SPAWNS',
+                     name: window.myHandle,
+                     data: spawnData
+                  });
+                  peers[data.name].send({
+                     type: 'SYNC_SPAWN',
+                     name: window.myHandle
+                  })
+               }
+               break;
                case 'SYNC_SPAWN':
-                  console.log('My spawns are synced!');
-                  hasSyncedSpawns = true;
-                  break;
+               console.log('My spawns are synced!');
+               hasSyncedSpawns = true;
+               break;
             }
          });
 
          if (!hasSyncedSpawns) {
             initialRequestSpawnTimers();
 
-         // somebody peacefully disconnected. END THEM.
-         new_connection.on('disconnected', function() {
-            pruneDeadRoomba(handle);
-         });
-         new_connection.on('close', function() {
-            pruneDeadRoomba(handle);
-         });
+            // somebody peacefully disconnected. END THEM.
+            new_connection.on('disconnected', function() {
+               pruneDeadRoomba(handle);
+            });
+            new_connection.on('close', function() {
+               pruneDeadRoomba(handle);
+            });
+         }
       }
 
       function pruneDeadRoomba(handle) {
@@ -260,7 +261,7 @@ define([
       var POLL_DELAY = 250;
       function initialRequestSpawnTimers() {
          if (hasSyncedSpawns)
-            return;
+         return;
 
          setTimeout(initialRequestSpawnTimers, POLL_DELAY);
 
@@ -302,7 +303,7 @@ define([
          despawnCallback: function(callback) {
             despawnCallback = callback;
          }
-      }
+      };
    })();
 
    return Network;
