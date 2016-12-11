@@ -44,7 +44,8 @@ define([
             return;
          }
 
-         console.log('V R R O O M M B A A')
+         console.log('V R R O O M M B A A');
+         this.shouldRemove = true;
       },
 
       endContact: function(other) {

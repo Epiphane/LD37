@@ -28,11 +28,6 @@ define([
                self.onReady();
             });
          });
-      },
-
-      update: function(dt) {
-         this.rotation.y += 6 * dt;
-         this.entity.rotation.y -= 3 * dt;
       }
    });
 });

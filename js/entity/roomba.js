@@ -41,6 +41,7 @@ define([
          this.position.y += roombaHeight / 2;
 
          this.getComponent('OBJMesh').load('art/', 'test_texture.mtl', 'test_texture.obj');
+         this.getComponent('OBJMesh').position.y -= 0.25;;
       },
 
       beginContact: function(other) {

@@ -23,7 +23,7 @@ define([
          this.body.CreateFixture(fixtureDef);
          this.body.SetUserData(this.id);
 
-         this.remove = false;
+         this.shouldRemove = false;
       },
 
       beginContact: function(other) {

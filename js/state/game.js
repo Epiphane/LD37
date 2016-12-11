@@ -107,14 +107,24 @@ define([
       },
 
       beginContact: function(contact, idA, idB) {
-         this.scene.getObjectById(idA).beginContact(this.scene.getObjectById(idB));
+         var A = this.scene.getObjectById(idA);
+         var B = this.scene.getObjectById(idB);
+
+         if (A && B)
+            A.beginContact(B);
       },
 
       endContact: function(contact, idA, idB) {
-         this.scene.getObjectById(idA).endContact(this.scene.getObjectById(idB));
+         var A = this.scene.getObjectById(idA);
+         var B = this.scene.getObjectById(idB);
+
+         if (A && B)
+            A.endContact(B);
       },
 
       update: function(dt, game) {
+         var self = this;
+
          // Using 1/60 instead of dt because fixed-time calculations are more accurate
          this.world.Step(1/60, 3, 2);
 
@@ -125,6 +135,10 @@ define([
                return;
 
             child.update(dt, game);
+
+            if (child.shouldRemove) {
+               self.scene.remove(child);
+            }
          });
 
          this.broadcastTick--
