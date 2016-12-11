@@ -285,7 +285,7 @@ define([
       // window closed (note this isn't 100% reliable but for the jam should help us clean up
       // some dead roombas)
       window.onbeforeunload = function() {
-
+         peerAPI.destroy();
       }
 
       return {
@@ -311,7 +311,7 @@ define([
          },
          despawnCallback: function(callback) {
             despawnCallback = callback;
-         }, 
+         },
          syncSpawnCallback: function(callback) {
             syncSpawnCallback = callback;
          }
