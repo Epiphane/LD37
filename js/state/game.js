@@ -84,6 +84,7 @@ define([
          // Roomba 1
          this.roomba = new Roomba([RoombaInput], this.world, this.room);
          this.roomba.isPlayer = true;
+         this.roomba.handle = window.myHandle;
          this.scene.add(this.roomba);
 
          // Camera magic
@@ -94,6 +95,7 @@ define([
          this.networkedRoombas = [];
          Network.newRoombaCallback(function(handle) {
             var networkedRoomba = new Roomba([NetworkedRoomba], that.world, that.room);
+            networkedRoomba.getComponent('RoombaLabel').setText(handle);
             // later, maybe add a label with the roomba's name to the game world..?
             that.scene.add(networkedRoomba);
             that.networkedRoombas.push(networkedRoomba);
@@ -168,6 +170,11 @@ define([
 
       update: function(dt, game) {
          var self = this;
+
+         if (this.roomba.handle !== window.myHandle) {
+            this.roomba.handle = window.myHandle;
+            this.roomba.getComponent('RoombaLabel').setText(this.roomba.handle);
+         }
 
          if (this.canSpawn) {
             this.spawnDelay -= dt;
