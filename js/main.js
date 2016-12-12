@@ -65,6 +65,13 @@ $(document).ready(function() {
       Juicy.Sound.load('item', './audio/item.mp3', false, 4, 0.8);
       Juicy.Sound.load('kill', './audio/kill.mp3', false, 4, 0.9);
 
+      window.toggleMute = function(type) {
+         var muted = Juicy.toggleMute(type);
+
+         if (muted) jQuery('#' + type).addClass('strike');
+         else jQuery('#' + type).removeClass('strike');
+      }
+
       // Juicy.Game.setState(new EndGameScore(GAME_WIDTH, GAME_HEIGHT, 'classic2', 262, {}, {"seed": 0})).run();
       Juicy.Game.setState(new MenuState(GAME_WIDTH, GAME_HEIGHT, 'classic', 250, {}, {"seed": 0})).run();
 

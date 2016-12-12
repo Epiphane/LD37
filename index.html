@@ -4,6 +4,7 @@
    <meta charset=utf-8>
    <title>Ludum Dare 27</title>
    <link rel="icon" type="image/png" href="favicon.ico">
+   <link rel="stylesheet" href="./lib/font-awesome-4.7.0/css/font-awesome.min.css">
    <style>
    body {
       margin: 0;
@@ -44,9 +45,28 @@
       text-align: center;
       margin: 0 auto;
    }
+
+   #music_controls {
+      background: rgba(255, 255, 255, 0.8);
+      position: fixed;
+      top: 0;
+      left: 0;
+      padding: 20px;
+      z-index: 10;
+      font-size: 24px;
+   }
+
+   .strike i {
+      text-decoration: line-through;
+   }
    </style>
 </head>
 <body>
+   <div id="music_controls">
+      <a id="music" href="javascript:toggleMute('music')"><i class="fa fa-music"></i></a>
+      &nbsp;
+      <a id="sfx" href="javascript:toggleMute('sfx')"><i class="fa fa-volume-up"></i></a>
+   </div>
    <div id="container-fluid">
       <div id="row">
          <div id="game" style="position: relative;" class="col-md-6"></div>

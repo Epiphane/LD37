@@ -148,21 +148,7 @@ define([
          this.die('weapon', doNotBroadcast);
          this.getComponent('Killable').kill();
          Juicy.Sound.play(chance.pickone(['kill']));
-      },
-
-      sawDeath: function(doNotBroadcast) {
-         this.weaponDeath(doNotBroadcast);
-         Juicy.Sound.play(chance.pickone(['saw']));
-      },
-
-      flailDeath: function(doNotBroadcast) {
-         this.weaponDeath(doNotBroadcast);
-         Juicy.Sound.play(chance.pickone(['kill']));
-      },
-
-      lanceDeath: function(doNotBroadcast) {
-         this.weaponDeath(doNotBroadcast);
-         Juicy.Sound.play(chance.pickone(['kill']));
+         console.trace();
       },
 
       bodyDef: roombaBodyDef,

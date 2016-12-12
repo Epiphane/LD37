@@ -71,7 +71,7 @@ define([
       },
 
       beginContact: function(other) {
-         if (!this.visible || this.parent.dead)
+         if (!this.visible || this.parent.dead || this.parent === other)
             return;
 
          // Using Roomba itself would create a circular dependency
