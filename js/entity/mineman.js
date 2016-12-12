@@ -41,6 +41,8 @@ define([
          roombapos.op_sub(minepos);
          roombapos.op_mul(this.MINE_POWER);
          other.body.ApplyForce(roombapos, other.body.GetWorldCenter());
+            
+         Juicy.Sound.play(chance.pickone(['mine']));
 
          return true;
       },

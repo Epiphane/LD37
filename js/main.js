@@ -55,15 +55,15 @@ $(document).ready(function() {
       Juicy.Game.init(renderer, GAME_WIDTH, GAME_HEIGHT, KeyMap);
 
       // Load sounds
-      Juicy.Sound.load('music', './audio/music.mp3', true, 1.1);
-      Juicy.Sound.load('coin1', './audio/coin1.mp3', false, 0.8);
-      Juicy.Sound.load('coin2', './audio/coin2.mp3', false, 0.8);
-      Juicy.Sound.load('coin3', './audio/coin3.mp3', false, 0.8);
-      Juicy.Sound.load('fall', './audio/fall.mp3', false, 0.8);
-      Juicy.Sound.load('mine', './audio/mine.mp3', false, 0.8);
-      Juicy.Sound.load('saw', './audio/saw.mp3', false, 0.8);
-      Juicy.Sound.load('item', './audio/item.mp3', false, 0.8);
-      Juicy.Sound.load('kill', './audio/kill.mp3', false, 1);
+      Juicy.Sound.load('music', './audio/music.mp3', true, 1, 0.9);
+      Juicy.Sound.load('coin1', './audio/coin1.mp3', false, 4, 0.7);
+      Juicy.Sound.load('coin2', './audio/coin2.mp3', false, 4, 0.7);
+      Juicy.Sound.load('coin3', './audio/coin3.mp3', false, 4, 0.7);
+      Juicy.Sound.load('fall', './audio/fall.mp3', false, 4, 0.5);
+      Juicy.Sound.load('mine', './audio/mine.mp3', false, 8, 0.8);
+      Juicy.Sound.load('saw', './audio/saw.mp3', false, 4, 0.8);
+      Juicy.Sound.load('item', './audio/item.mp3', false, 4, 0.8);
+      Juicy.Sound.load('kill', './audio/kill.mp3', false, 4, 0.9);
 
       // Juicy.Game.setState(new EndGameScore(GAME_WIDTH, GAME_HEIGHT, 'classic2', 262, {}, {"seed": 0})).run();
       Juicy.Game.setState(new MenuState(GAME_WIDTH, GAME_HEIGHT, 'classic', 250, {}, {"seed": 0})).run();

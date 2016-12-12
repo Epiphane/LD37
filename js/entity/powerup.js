@@ -73,6 +73,13 @@ define([
          window.scores[window.myHandle] = other.score;
          updateHighScores();
 
+         if (this.powerup === 'COIN') {
+            Juicy.Sound.play(chance.pickone(['coin1', 'coin2', 'coin3']));
+         }
+         else {
+            Juicy.Sound.play(chance.pickone(['item']));
+         }
+
          return true;
       },
 

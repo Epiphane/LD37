@@ -140,11 +140,29 @@ define([
       fallDeath: function(doNotBroadcast) {
          this.die('fall', doNotBroadcast);
          this.getComponent('Fallable').fall();
+         if (this.isPlayer)   
+            Juicy.Sound.play(chance.pickone(['fall']));
       },
 
       weaponDeath: function(doNotBroadcast) {
          this.die('weapon', doNotBroadcast);
          this.getComponent('Killable').kill();
+         Juicy.Sound.play(chance.pickone(['kill']));
+      },
+
+      sawDeath: function(doNotBroadcast) {
+         this.weaponDeath(doNotBroadcast);
+         Juicy.Sound.play(chance.pickone(['saw']));
+      },
+
+      flailDeath: function(doNotBroadcast) {
+         this.weaponDeath(doNotBroadcast);
+         Juicy.Sound.play(chance.pickone(['kill']));
+      },
+
+      lanceDeath: function(doNotBroadcast) {
+         this.weaponDeath(doNotBroadcast);
+         Juicy.Sound.play(chance.pickone(['kill']));
       },
 
       bodyDef: roombaBodyDef,
