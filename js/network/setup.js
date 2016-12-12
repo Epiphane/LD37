@@ -4,8 +4,8 @@ define([
    Roomba
 ) {
    var Network = (function() {
-      // var API_URL = "https://elliot-commitment.herokuapp.com/"
-      var API_URL = "http://localhost:3000/";
+      var API_URL = "https://elliot-commitment.herokuapp.com/"
+      // var API_URL = "http://localhost:3000/";
 
       var myId = "";
       window.myHandle = "";
