@@ -45,6 +45,7 @@ define([
 
       texture: texture,
       material: new THREE.MeshBasicMaterial({ color: 0xffffff, map: texture, transparent: true }),
+      pitMaterial: new THREE.MeshBasicMaterial({ color: 0x000000, map: texture, transparent: true, opacity: 0 }),
       fallingTileMaterial: new THREE.MeshBasicMaterial({ color: 0xaaaaaa, map: texture, transparent: true }),
    };
 

@@ -49,8 +49,6 @@ define([
 
          if (this.getPowerupAt(position)) {
             return;
-            console.error('Ya dingus! theres already a powerup at', position);
-            return;
          }
 
          switch(type) {
@@ -61,7 +59,6 @@ define([
             var spawn = new SpinningBlade(this.world);
             break;
          case 'FLAIL':
-         console.log('FLAIL FAIL');
             var spawn = new FlailPowerup(this.world);
             break;
          case 'LANCE':

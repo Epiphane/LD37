@@ -75,7 +75,6 @@ define([
 
                   new_connection.on('open', function() {
                      // Yay! We're connected to a new friend!
-                     console.log("Found a new friend. His name is: " + newFriend.name);
                      new_connection_established(new_connection, newFriend.name);
                   });
 
@@ -95,7 +94,6 @@ define([
                });
 
                hasSyncedSpawns = (data.length === 0);
-               console.log('No peers, im good');
                if (hasSyncedSpawns && syncSpawnCallback)
                   syncSpawnCallback();
             }
@@ -199,13 +197,11 @@ define([
                }
                break;
                case 'SYNC_SPAWN':
-               console.log('My spawns are synced!');
                hasSyncedSpawns = true;
                if (syncSpawnCallback)
                syncSpawnCallback();
                break;
                case 'DEATH':
-               console.log("someone died :( " + data.name + " " + data.how);
                if (data.how === 'fall') {
                   networkSyncedEntities[data.name.toLowerCase()].entity.fallDeath(true);
                }
@@ -306,7 +302,6 @@ define([
 
          var tribute = handles[Math.floor(Math.random() * handles.length)];
 
-         console.log('Syncing spawns with ' + tribute + '...');
          peers[tribute].send({
             type: 'REQUEST_SPAWNS',
             name: window.myHandle

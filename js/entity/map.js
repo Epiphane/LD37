@@ -10,6 +10,7 @@ define([
    var WALL     = 0,
        BREAKABLE= 64,
        FALLING  = 128,
+       MISSING  = 192,
        FLOOR    = 255;
    // G
    var NOTHING = 0,
@@ -88,6 +89,10 @@ define([
                      break;
                   case FALLING:
                      tileObj = MapHelper.createFallingFloor();
+                     tileObj.setPosition(x, -0.5, z);
+                     break;
+                  case MISSING:
+                     tileObj = MapHelper.createPit();
                      tileObj.setPosition(x, -0.5, z);
                      break;
                   default:

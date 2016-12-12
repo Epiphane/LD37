@@ -177,6 +177,7 @@ define([
          var self = this;
 
          if (this.roomba.handle !== window.myHandle) {
+            delete scores[this.roomba.handle]
             this.roomba.handle = window.myHandle;
             this.roomba.setColor(window.roombaColor);
             this.roomba.getComponent('RoombaLabel').setText(this.roomba.handle);

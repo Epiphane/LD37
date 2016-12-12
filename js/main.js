@@ -74,9 +74,9 @@ $(document).ready(function() {
          localStorage.setItem(type + 'Muted', muted);
       }
 
-      if (localStorage.getItem('musicMuted'))
+      if (localStorage.getItem('musicMuted') === "true")
          window.toggleMute('music');
-      if (localStorage.getItem('sfxMuted'))
+      if (localStorage.getItem('sfxMuted') === "true")
          window.toggleMute('sfx');
 
       // Juicy.Game.setState(new EndGameScore(GAME_WIDTH, GAME_HEIGHT, 'classic2', 262, {}, {"seed": 0})).run();

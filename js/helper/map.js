@@ -3,12 +3,14 @@ define([
    'helper/box2d',
    'helper/map_constants',
    'entity/map/falling_tile',
+   'entity/map/pit',
    'entity/map/breakable_wall'
 ], function(
    Box2D,
    Box2DHelper,
    MapConstants,
    FallingTile,
+   Pit,
    BreakableWall
 ) {
    var world = null;
@@ -27,6 +29,12 @@ define([
 
    MapHelper.createFallingFloor = function() {
       var tileObj = new FallingTile(world);
+
+      return tileObj;
+   };
+
+   MapHelper.createPit = function() {
+      var tileObj = new Pit(world);
 
       return tileObj;
    };
