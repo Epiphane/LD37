@@ -43,45 +43,34 @@ define([
    };
 
    // Texture UVs
+   var FRONT = 0, BACK = 2, TOP = 4, BOTTOM = 6, LEFT = 8, RIGHT = 10;
+   function uvSquare(geometry, side, width, height, min_x, min_y, max_x, max_y) {
+      min_x /= width;
+      max_x /= width;
+      min_y /= height;
+      max_y /= height;
+
+      geometry.faceVertexUvs[0][side]     = [new THREE.Vector2(min_x, max_y), new THREE.Vector2(min_x, min_y), new THREE.Vector2(max_x, max_y)];
+      geometry.faceVertexUvs[0][side + 1] = [new THREE.Vector2(min_x, min_y), new THREE.Vector2(max_x, min_y), new THREE.Vector2(max_x, max_y)];
+   }
+
+   var texture_size = 512;
+
    wallGeometry.faceVertexUvs[0] = [];
-   // Front
-   wallGeometry.faceVertexUvs[0][0] = [new THREE.Vector2(0, 1), new THREE.Vector2(0, 0),     new THREE.Vector2(0.125, 1)];
-   wallGeometry.faceVertexUvs[0][1] = [new THREE.Vector2(0, 0), new THREE.Vector2(0.125, 0), new THREE.Vector2(0.125, 1)];
-   // Right
-   wallGeometry.faceVertexUvs[0][10] = [new THREE.Vector2(0.125, 1), new THREE.Vector2(0.125, 0), new THREE.Vector2(0.25, 1)];
-   wallGeometry.faceVertexUvs[0][11] = [new THREE.Vector2(0.125, 0), new THREE.Vector2(0.25, 0),  new THREE.Vector2(0.25, 1)];
-   // Back
-   wallGeometry.faceVertexUvs[0][2] = [new THREE.Vector2(0.25, 1), new THREE.Vector2(0.25, 0), new THREE.Vector2(0.375, 1)];
-   wallGeometry.faceVertexUvs[0][3] = [new THREE.Vector2(0.25, 0), new THREE.Vector2(0.375, 0), new THREE.Vector2(0.375, 1)];
-   // Left
-   wallGeometry.faceVertexUvs[0][8] = [new THREE.Vector2(0.375, 1), new THREE.Vector2(0.375, 0), new THREE.Vector2(0.5, 1)];
-   wallGeometry.faceVertexUvs[0][9] = [new THREE.Vector2(0.375, 0), new THREE.Vector2(0.5, 0), new THREE.Vector2(0.5, 1)];
-   // Top
-   wallGeometry.faceVertexUvs[0][4] = [new THREE.Vector2(0.625, 1), new THREE.Vector2(0.5, 1), new THREE.Vector2(0.625, 0.75)];
-   wallGeometry.faceVertexUvs[0][5] = [new THREE.Vector2(0.5, 1), new THREE.Vector2(0.5, 0.75), new THREE.Vector2(0.625, 0.75)];
-   // Bottom
-   wallGeometry.faceVertexUvs[0][6] = [new THREE.Vector2(0.625, 1), new THREE.Vector2(0.625, 0.75), new THREE.Vector2(0.75, 1)];
-   wallGeometry.faceVertexUvs[0][7] = [new THREE.Vector2(0.625, 0.75), new THREE.Vector2(0.75, 0.75), new THREE.Vector2(0.75, 1)];
+   uvSquare(wallGeometry, FRONT,  texture_size, texture_size, 0,   0,  32,  128);
+   uvSquare(wallGeometry, RIGHT,  texture_size, texture_size, 32,  0,  64,  128);
+   uvSquare(wallGeometry, BACK,   texture_size, texture_size, 64,  0,  96,  128);
+   uvSquare(wallGeometry, LEFT,   texture_size, texture_size, 96,  96, 128, 128);
+   uvSquare(wallGeometry, TOP,    texture_size, texture_size, 128, 96, 160, 128);
+   uvSquare(wallGeometry, BOTTOM, texture_size, texture_size, 160, 96, 192, 128);
 
    tileGeometry.faceVertexUvs[0] = [];
-   // Front
-   tileGeometry.faceVertexUvs[0][0] = [new THREE.Vector2(0.5, 0.5),  new THREE.Vector2(0.5, 0.25),   new THREE.Vector2(0.625, 0.5)];
-   tileGeometry.faceVertexUvs[0][1] = [new THREE.Vector2(0.5, 0.25), new THREE.Vector2(0.625, 0.25), new THREE.Vector2(0.625, 0.5)];
-   // Right
-   tileGeometry.faceVertexUvs[0][10] = [new THREE.Vector2(0.625, 0.5),  new THREE.Vector2(0.625, 0.25), new THREE.Vector2(0.75, 0.5)];
-   tileGeometry.faceVertexUvs[0][11] = [new THREE.Vector2(0.625, 0.25), new THREE.Vector2(0.75, 0.25),  new THREE.Vector2(0.75, 0.5)];
-   // Back
-   tileGeometry.faceVertexUvs[0][2] = [new THREE.Vector2(0.5, 0.25), new THREE.Vector2(0.5, 0),   new THREE.Vector2(0.625, 0.25)];
-   tileGeometry.faceVertexUvs[0][3] = [new THREE.Vector2(0.5, 0),    new THREE.Vector2(0.625, 0), new THREE.Vector2(0.625, 0.25)];
-   // Left
-   tileGeometry.faceVertexUvs[0][8] = [new THREE.Vector2(0.625, 0.25), new THREE.Vector2(0.625, 0), new THREE.Vector2(0.75, 0.25)];
-   tileGeometry.faceVertexUvs[0][9] = [new THREE.Vector2(0.625, 0),    new THREE.Vector2(0.75, 0),  new THREE.Vector2(0.75, 0.25)];
-   // Top
-   tileGeometry.faceVertexUvs[0][4] = [new THREE.Vector2(0.625, 0.75), new THREE.Vector2(0.5, 0.75), new THREE.Vector2(0.625, 0.5)];
-   tileGeometry.faceVertexUvs[0][5] = [new THREE.Vector2(0.5, 0.75), new THREE.Vector2(0.5, 0.5), new THREE.Vector2(0.625, 0.5)];
-   // Bottom
-   tileGeometry.faceVertexUvs[0][6] = [new THREE.Vector2(0.625, 0.625), new THREE.Vector2(0.625, 0.5), new THREE.Vector2(0.75, 0.625)];
-   tileGeometry.faceVertexUvs[0][7] = [new THREE.Vector2(0.625, 0.5),   new THREE.Vector2(0.75, 0.5),  new THREE.Vector2(0.75, 0.625)];
+   uvSquare(tileGeometry, TOP,    texture_size, texture_size, 128, 64, 160, 96);
+   uvSquare(tileGeometry, BOTTOM, texture_size, texture_size, 160, 64, 192, 96);
+   uvSquare(tileGeometry, FRONT,  texture_size, texture_size, 128, 32, 160, 64);
+   uvSquare(tileGeometry, RIGHT,  texture_size, texture_size, 160, 32, 192, 64);
+   uvSquare(tileGeometry, BACK,   texture_size, texture_size, 128,  0, 160, 32);
+   uvSquare(tileGeometry, LEFT,   texture_size, texture_size, 160,  0, 192, 32);
 
    return MapConstants;
 });
