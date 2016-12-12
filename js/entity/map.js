@@ -100,12 +100,12 @@ define([
                   case NOTHING:
                      break;
                   case COIN:
-                     this.spawns.coin.push([x, this.tiles.length - 1 - z]);
-                     this.spawns.all.push([x, this.tiles.length - 1 - z, 'COIN']);
+                     this.spawns.coin.push([x, z]);
+                     this.spawns.all.push([x, z, 'COIN']);
                      break;
                   case POWERUP:
-                     this.spawns.powerup.push([x, this.tiles.length - 1 - z]);
-                     this.spawns.all.push([x, this.tiles.length - 1 - z, 'POWERUP']);
+                     this.spawns.powerup.push([x, z]);
+                     this.spawns.all.push([x, z, 'POWERUP']);
                      break;
                   case SPAWN:
                      this.spawns.player.push([x, z]);
