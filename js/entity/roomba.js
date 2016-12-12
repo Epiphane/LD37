@@ -2,6 +2,7 @@ define([
    'box2d',
    'component/fallable',
    'component/killable',
+   'component/roomba_label',
    'entity/spinning_blade',
    'entity/box2d_mesh',
    'network/setup'
@@ -9,6 +10,7 @@ define([
    Box2D,
    Fallable,
    Killable,
+   RoombaLabel,
    SpinningBlade,
    Box2DMesh,
    Network
@@ -39,6 +41,7 @@ define([
    // DEFINITION
    var Roomba = Box2DMesh.extend({
       constructor: function(components, world, room) {
+         components.unshift(RoombaLabel);
          components.unshift(Fallable);
          components.unshift(Killable);
 
