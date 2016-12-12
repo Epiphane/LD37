@@ -116,7 +116,7 @@ define([
       uvSquare(tileGeometry, LEFT,   texture_size, texture_size, 160,  0, 192, 32);
    }
 
-   var NUM_THEMES = 1;
+   var NUM_THEMES = 2;
    MapConstants.setTheme(Math.floor(Math.random() * NUM_THEMES));
 
    return MapConstants;
