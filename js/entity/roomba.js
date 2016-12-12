@@ -141,7 +141,7 @@ define([
       fallDeath: function(doNotBroadcast) {
          this.die('fall', doNotBroadcast);
          this.getComponent('Fallable').fall();
-         if (this.isPlayer)   
+         if (this.isPlayer)
             Juicy.Sound.play(chance.pickone(['fall']));
       },
 

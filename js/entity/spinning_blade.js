@@ -44,7 +44,7 @@ define([
 
          this.shouldRemove = false;
 
-         this.getComponent('OBJMesh').load('art/', 'test_texture.mtl', 'test_texture.obj');
+         this.getComponent('OBJMesh').load('art/', 'test_texture.mtl', 'sawblade.obj');
          this.getComponent('OBJMesh').position.y -= 0.25;
 
          this.speed = 5;
