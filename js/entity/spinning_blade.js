@@ -47,7 +47,7 @@ define([
          this.getComponent('OBJMesh').load('art/', 'test_texture.mtl', 'sawblade.obj');
          this.getComponent('OBJMesh').position.y -= 0.25;
 
-         this.speed = 5;
+         this.speed = -1;
          // this.visible = false;
       },
 
