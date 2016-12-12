@@ -115,21 +115,22 @@ define([
          this.setPosition(spawn[0], this.position.y, spawn[1]);
       },
 
-      die: function(how) {
+      die: function(how, doNotBroadcast) {
          if (this.dead) return;
 
          this.dead = true;
          this.respawnTimer = 2;
-         Network.broadcastDeath(how);
+         if (!doNotBroadcast)
+            Network.broadcastDeath(how);
       },
 
-      fallDeath: function() {
-         this.die('fall');
+      fallDeath: function(doNotBroadcast) {
+         this.die('fall', doNotBroadcast);
          this.getComponent('Fallable').fall();
       },
 
-      weaponDeath: function() {
-         this.die('weapon');
+      weaponDeath: function(doNotBroadcast) {
+         this.die('weapon', doNotBroadcast);
          this.getComponent('Killable').kill();
       },
 
