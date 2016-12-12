@@ -55,17 +55,15 @@ $(document).ready(function() {
       Juicy.Game.init(renderer, GAME_WIDTH, GAME_HEIGHT, KeyMap);
 
       // Load sounds
-      // Juicy.Sound.load('select', './audio/select2.mp3', false);
-      // Juicy.Sound.load('place_piece', './audio/place_piece.mp3', false, 4);
-      // Juicy.Sound.load('move', './audio/move_piece.mp3', false, 8);
-      // Juicy.Sound.load('rotate', './audio/rotate_piece.mp3', false, 8);
-      // Juicy.Sound.load('twister', './audio/Twister Tetris2.mp3', true, 1, 0.35);
-      // Juicy.Sound.load('combo_0', './audio/combo_0.mp3', false, 2);
-      // Juicy.Sound.load('combo_1', './audio/combo_1.mp3', false, 2);
-      // Juicy.Sound.load('combo_2', './audio/combo_2.mp3', false, 2);
-      // Juicy.Sound.load('combo_3', './audio/combo_3.mp3', false, 2);
-      // Juicy.Sound.load('combo_4', './audio/combo_4.mp3', false, 2);
-      // Juicy.Sound.load('levelup', './audio/Coin01.mp3', false);
+      Juicy.Sound.load('music', './audio/music.mp3', true, 1.1);
+      Juicy.Sound.load('coin1', './audio/coin1.mp3', false, 0.8);
+      Juicy.Sound.load('coin2', './audio/coin2.mp3', false, 0.8);
+      Juicy.Sound.load('coin3', './audio/coin3.mp3', false, 0.8);
+      Juicy.Sound.load('fall', './audio/fall.mp3', false, 0.8);
+      Juicy.Sound.load('mine', './audio/mine.mp3', false, 0.8);
+      Juicy.Sound.load('saw', './audio/saw.mp3', false, 0.8);
+      Juicy.Sound.load('item', './audio/item.mp3', false, 0.8);
+      Juicy.Sound.load('kill', './audio/kill.mp3', false, 1);
 
       // Juicy.Game.setState(new EndGameScore(GAME_WIDTH, GAME_HEIGHT, 'classic2', 262, {}, {"seed": 0})).run();
       Juicy.Game.setState(new MenuState(GAME_WIDTH, GAME_HEIGHT, 'classic', 250, {}, {"seed": 0})).run();
