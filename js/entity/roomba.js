@@ -4,6 +4,7 @@ define([
    'component/killable',
    'component/roomba_label',
    'entity/spinning_blade',
+   'entity/flail',
    'entity/box2d_mesh',
    'network/setup'
 ], function(
@@ -12,6 +13,7 @@ define([
    Killable,
    RoombaLabel,
    SpinningBlade,
+   Flail,
    Box2DMesh,
    Network
 ) {
@@ -35,7 +37,7 @@ define([
    var roombaShape = new Box2D.b2CircleShape();
        roombaShape.set_m_radius(roombaRadius);;
    var roombaFixtureDef = new Box2D.b2FixtureDef();
-       roombaFixtureDef.set_density(0.0);
+       roombaFixtureDef.set_density(100.0);
        roombaFixtureDef.set_shape(roombaShape);
 
    // DEFINITION
@@ -60,12 +62,8 @@ define([
          this.MINE_COOLDOWN_MAX = 200;
          this.mineCooldown = 3;
 
-         this.add(this.blade = new SpinningBlade(world));
-         var joint = new Box2D.b2WeldJointDef();
-             joint.set_collideConnected(false);
-
-         joint.Initialize(this.body, this.blade.body, new Box2D.b2Vec2(0.0, 0.0));
-         world.CreateJoint(joint);
+         this.add(this.blade = new SpinningBlade(this, world));
+         this.add(this.flail = new Flail(this, world));
       },
 
       setPosition: function(x, y, z) {
@@ -75,6 +73,9 @@ define([
          Box2DMesh.prototype.setPosition.apply(this.blade, arguments);
          // But anchor the visual part
          this.blade.position.set(0, 0, 0);
+
+         // Update the blade b2Body...
+         Box2DMesh.prototype.setPosition.apply(this.flail, arguments);
       },
 
       beginContact: function(other) {
@@ -98,7 +99,8 @@ define([
          this.respawnTimer = 0;
          this.getComponent('Fallable').reset();
          this.getComponent('Killable').reset();
-         this.blade.visible = false;
+         this.blade.deactivate();
+         this.flail.deactivate();
 
          var amountToLose = Math.min(5, window.scores[window.myHandle]);
          window.scores[window.myHandle] -= amountToLose;

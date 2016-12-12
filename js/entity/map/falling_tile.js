@@ -51,6 +51,10 @@ define([
             delete other.feet[this.id];
          }
 
+         if (!(other instanceof Roomba)) {
+            return;
+         }
+
          if (this.shaking) {
             this.fall();
          }

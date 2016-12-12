@@ -2,12 +2,14 @@ define([
    'box2d',
    'entity/powerup',
    'entity/powerup_blade',
+   'entity/powerup_flail',
    'entity/powerup_mines',
    'entity/mineman',
 ], function(
    Box2D,
    Powerup,
    SpinningBlade,
+   FlailPowerup,
    Mines,
    MineInstance
 ) {
@@ -35,7 +37,7 @@ define([
          } while (this.getPowerupAt(position));
 
          if (type === 'POWERUP')
-            type = chance.pickone(['MINES', 'BLADE']);
+            type = chance.pickone(['FLAIL']);
 
          this.spawnPowerup(type, position);
       },
@@ -55,6 +57,10 @@ define([
             break;
          case 'BLADE':
             var spawn = new SpinningBlade(this.world);
+            break;
+         case 'FLAIL':
+         console.log('FLAIL FAIL');
+            var spawn = new FlailPowerup(this.world);
             break;
          case 'MINES':
             var spawn = new Mines(this.world);

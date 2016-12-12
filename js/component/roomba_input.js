@@ -40,8 +40,8 @@ define([
          var velocity = this.entity.body.GetLinearVelocity();
          var v_x = velocity.get_x();
          var v_y = velocity.get_y();
-         var speed = 50;
-         var rev_speed = 50;
+         var speed = 5000;
+         var rev_speed = 5000;
          if (game.keyDown('LEFT')) {
             if (v_x > 0) {
                this.entity.body.ApplyForce(new Box2D.b2Vec2(-rev_speed, 0), this.entity.body.GetWorldCenter());

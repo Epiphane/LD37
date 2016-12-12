@@ -16,7 +16,7 @@ define([
       },
 
       powerup: 'ACTUAL_MINE',
-      MINE_POWER: 100000,
+      MINE_POWER: 100000000,
 
       setType: function(type) {
          console.log(type);

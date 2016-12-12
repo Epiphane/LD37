@@ -11,9 +11,6 @@ define([
 
          this.load('art/', 'test_texture.mtl', 'test_texture.obj');
          this.position.y -= 0.25;
-
-         this.speed = 5;
-         this.visible = false;
       },
 
       load: function(path, mtl, obj) {
@@ -34,13 +31,6 @@ define([
                self.onReady();
             });
          });
-      },
-
-      update: function(dt) {
-         if (!this.visible)
-            return;
-
-         this.rotation.y += dt * 4 * this.speed;
       }
    });
 });

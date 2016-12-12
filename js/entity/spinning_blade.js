@@ -28,13 +28,19 @@ define([
          density: 0.0
       }),
 
-      constructor: function(world) {
+      constructor: function(entity, world) {
          Juicy.Entity.call(this, ['OBJMesh']);
 
          // Initialize Box2D component
          this.body = world.CreateBody(this.bodyDef);
          this.body.CreateFixture(this.fixtureDef);
          this.body.SetUserData(this.id);
+
+         var joint = new Box2D.b2WeldJointDef();
+             joint.set_collideConnected(false);
+
+         joint.Initialize(entity.body, this.body, new Box2D.b2Vec2(0.0, 0.0));
+         world.CreateJoint(joint);
 
          this.shouldRemove = false;
 
@@ -43,6 +49,16 @@ define([
 
          this.speed = 5;
          // this.visible = false;
+      },
+
+      activate: function() {
+         this.visible = true;
+         this.body.GetFixtureList().SetSensor(false);
+      },
+
+      deactivate: function() {
+         this.visible = false;
+         this.body.GetFixtureList().SetSensor(true);
       },
 
       beginContact: function(other) {

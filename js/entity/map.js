@@ -112,7 +112,8 @@ define([
                      break;
                }
 
-               this.add(tileObj);
+               if (tileObj)
+                  this.add(tileObj);
             }.bind(this));
          }.bind(this));
       },

@@ -39,8 +39,8 @@ $(document).ready(function() {
          }
 
          jQuery('#fart').val(randomStr);
-         jQuery("#myModal").modal('show');
-         jQuery('form').submit();
+         // jQuery("#myModal").modal('show');
+         // jQuery('form').submit();
       }
       else {
          jQuery("#myModal").modal('show');
