@@ -105,6 +105,8 @@ define([
 
          Network.roombaDisconnectedCallback(function(networkComponent) {
             var dedRoomba = networkComponent.entity;
+            // debugger;
+            that.world.DestroyBody(dedRoomba.body);
             that.scene.remove(dedRoomba);
             var ndx = that.networkedRoombas.indexOf(dedRoomba);
             that.networkedRoombas.splice(ndx, 1);

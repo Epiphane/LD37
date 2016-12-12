@@ -230,7 +230,7 @@ define([
 
       function pruneDeadRoomba(handle) {
          if (peers[handle]) {
-            roombaDisconnectedCallback(peers[handle]);
+            roombaDisconnectedCallback(networkSyncedEntities[handle.toLowerCase()]);
             delete peers[handle];
          }
       }
