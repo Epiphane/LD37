@@ -36,7 +36,6 @@ define([
             type = 'BLADE';
 
          this.spawnPowerup(type, position);
-            console.log('Check', position);
       },
 
       spawnPowerup: function(type, position, silent) {
@@ -45,6 +44,7 @@ define([
          if (this.getPowerupAt(position)) {
             return;
             console.error('Ya dingus! theres already a powerup at', position);
+            return;
          }
 
          switch(type) {

@@ -32,21 +32,21 @@ $(document).ready(function() {
          //    online.remove();
          // });
 
-         var fpsOutput = document.createElement('div');
-         fpsOutput.id = 'debug';
+         // var fpsOutput = document.createElement('div');
+         // fpsOutput.id = 'debug';
 
-         Juicy.Game.setDebug(fpsOutput);
-         document.body.appendChild(fpsOutput);
+         // Juicy.Game.setDebug(fpsOutput);
+         // document.body.appendChild(fpsOutput);
 
-         var l = 'abcdefghijklmnopqrstuvwxyz';
-         var randomStr = '';
-         for (var letter = 0; letter < 10; letter ++) {
-            randomStr += l[Math.floor(Math.random() * l.length)];
-         }
+         // var l = 'abcdefghijklmnopqrstuvwxyz';
+         // var randomStr = '';
+         // for (var letter = 0; letter < 10; letter ++) {
+         //    randomStr += l[Math.floor(Math.random() * l.length)];
+         // }
 
-         jQuery('#fart').val(randomStr);
-         jQuery("#myModal").modal('show');
-         jQuery('form').submit();
+         // jQuery('#fart').val(randomStr);
+         // jQuery("#myModal").modal('show');
+         // jQuery('form').submit();
       }
       else {
          jQuery("#myModal").modal('show');

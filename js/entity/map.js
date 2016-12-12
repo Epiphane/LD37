@@ -1,127 +1,22 @@
 define([
    'box2d',
-   'entity/box2d_mesh',
-   'entity/roomba',
-   'entity/powerup',
-   'component/fallable'
+   'helper/map'
 ], function(
    Box2D,
-   Box2DMesh,
-   Roomba,
-   Powerup,
-   Fallable
+   MapHelper
 ) {
-   // TWEAK THESE
-   var wallRadius = 0.5;
-
-   // Load texture
-   var tileGeometry = new THREE.BoxGeometry(1, 1, 1);
-   var wallGeometry = new THREE.BoxGeometry(1, 4, 1);
-   var texture = new THREE.TextureLoader().load('textures/square-outline-textured.png');
-   var material = new THREE.MeshBasicMaterial({ color: 0xffffff, map: texture });
 
    // R
-   var WALL    = 0,
-       FALLING = 128,
-       FLOOR   = 255;
+   var WALL     = 0,
+       BREAKABLE= 64,
+       FALLING  = 128,
+       FLOOR    = 255;
    // G
    var NOTHING = 0,
        COIN    = 64,
        POWERUP = 12823984,
        MINE    = 128,
        SPAWN   = 255;
-
-   // BOX2D
-   var wallBodyDef = new Box2D.b2BodyDef();
-       wallBodyDef.set_type(Box2D.b2_kinematicBody);
-   var wallShape = new Box2D.b2PolygonShape();
-       wallShape.SetAsBox(wallRadius, wallRadius);
-   var wallFixtureDef = new Box2D.b2FixtureDef();
-       wallFixtureDef.set_density(0.0);
-       wallFixtureDef.set_shape(wallShape);
-
-   var FallingTile = Box2DMesh.extend({
-      geometry: tileGeometry,
-      material: new THREE.MeshBasicMaterial({ color: 0xaaaaaa, map: texture }),
-      bodyDef: {
-         type: Box2D.b2_kinematicBody
-      },
-      fixtureDef: {
-         density: 0.0,
-         isSensor: true,
-         shape: {
-            type: 'box',
-            args: [wallRadius, wallRadius]
-         }
-      },
-
-      components: ['Fallable'],
-
-      constructor: function() {
-         Box2DMesh.apply(this, arguments);
-
-         this.shaking = false;
-         this.falling = false;
-         this.respawn = 0;
-         this.t = 0;
-      },
-
-      beginContact: function(other) {
-         if (other instanceof Roomba) {
-            // Unstable!
-            other.feet[this.id] = this;
-         }
-
-         if (!(other instanceof Roomba) || this.respawn || other.dead) {
-            return;
-         }
-
-         this.shaking = true;
-         this.t = 0;
-      },
-
-      fall: function() {
-         this.falling = true;
-         this.shaking = false;
-         this.t = 0;
-         this.respawn = 2;
-         this.getComponent('Fallable').fall();
-      },
-
-      endContact: function(other) {
-         if (other instanceof Roomba) {
-            delete other.feet[this.id];
-         }
-
-         if (this.shaking) {
-            this.fall();
-         }
-      },
-
-      update: function(dt, game) {
-         Box2DMesh.prototype.update.apply(this, arguments);
-
-         if (this.shaking) {
-            this.t += dt;
-            this.position.z += Math.sin(this.t * 50) / 15;
-
-            if (this.t > 1.5) {
-               this.fall();
-            }
-         }
-
-         if (this.respawn) {
-            this.respawn -= dt;
-
-            if (this.respawn <= 0) {
-               this.respawn = 0;
-               this.falling = false;
-               this.shaking = false;
-               this.getComponent('Fallable').reset();
-            }
-         }
-      }
-   });
 
    var Map = Juicy.Entity.extend({
       constructor: function() {
@@ -160,7 +55,7 @@ define([
                var flag = g;
 
                // Black = WALL
-               row.push([type, flag, 0]);
+               row.unshift([type, flag, 0]);
             }
 
             this.tiles.push(row);
@@ -172,6 +67,8 @@ define([
       populateTiles: function(world) {
          var tilesize = 2;
 
+         MapHelper.setWorld(world);
+
          this.tiles.forEach(function(row, x) {
             row.forEach(function(tile, z) {
                var tileObj;
@@ -179,20 +76,23 @@ define([
                // Tile type
                switch (tile[0]) {
                   case FLOOR:
-                     var tileObj = new THREE.Mesh(tileGeometry, material);
-                         tileObj.position.set(x, -0.5, z);
+                     tileObj = MapHelper.createFloor();
+                     tileObj.position.set(x, -0.5, z);
                      break;
                   case WALL:
-                     var tileObj = new THREE.Mesh(wallGeometry, material);
-                         tileObj.position.set(x, 2, z);
-
-                     wallBodyDef.set_position(new Box2D.b2Vec2(-z, x));
-                     var wall = world.CreateBody(wallBodyDef);
-                         wall.CreateFixture(wallFixtureDef);
+                     tileObj = MapHelper.createWall(x, z);
+                     tileObj.position.set(x, 2, z);
                      break;
                   case FALLING:
-                     var tileObj = new FallingTile(world);
-                         tileObj.setPosition(x, -0.5, z);
+                     tileObj = MapHelper.createFallingFloor();
+                     tileObj.setPosition(x, -0.5, z);
+                     break;
+                  case BREAKABLE:
+                     tileObj = MapHelper.createWall(x, z);
+                     tileObj.position.set(x, 2, z);
+                     break;
+                  default:
+                     console.log('o my');
                      break;
                }
 
@@ -201,18 +101,18 @@ define([
                   case NOTHING:
                      break;
                   case COIN:
-                     this.spawns.coin.push([x, this.tiles.length - 1 - z]);
-                     this.spawns.all.push([x, this.tiles.length - 1 - z, 'COIN']);
+                     this.spawns.coin.push([x, z]);
+                     this.spawns.all.push([x, z, 'COIN']);
                      break;
                   case POWERUP:
-                     this.spawns.powerup.push([x, this.tiles.length - 1 - z]);
-                     this.spawns.all.push([x, this.tiles.length - 1 - z, 'POWERUP']);
+                     this.spawns.powerup.push([x, z]);
+                     this.spawns.all.push([x, z, 'POWERUP']);
                      break;
                   case MINE:
                      this.spawns.powerup.push([x, this.tiles.length - 1 - z]);
                      this.spawns.all.push([x, this.tiles.length - 1 - z, 'MINES']);
                   case SPAWN:
-                     this.spawns.player.push([x, this.tiles.length - 1 - z]);
+                     this.spawns.player.push([x, z]);
                      break;
                }
 
