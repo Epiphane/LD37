@@ -93,8 +93,9 @@ define([
 
          var that = this;
          this.networkedRoombas = [];
-         Network.newRoombaCallback(function(handle) {
+         Network.newRoombaCallback(function(handle, color) {
             var networkedRoomba = new Roomba([NetworkedRoomba], that.world, that.room);
+            networkedRoomba.getComponent('RoombaLabel').setColor(color);
             networkedRoomba.getComponent('RoombaLabel').setText(handle);
             // later, maybe add a label with the roomba's name to the game world..?
             that.scene.add(networkedRoomba);
@@ -129,7 +130,7 @@ define([
             return that.powerups.getSpawnData();
          });
 
-         this.canSpawn = false;
+         this.canSpawn = Network.canSpawn();
          this.spawnTime = 5;
          this.spawnDelay = 0;
          Network.syncSpawnCallback(function() {
@@ -173,6 +174,7 @@ define([
 
          if (this.roomba.handle !== window.myHandle) {
             this.roomba.handle = window.myHandle;
+            this.roomba.setColor(window.roombaColor);
             this.roomba.getComponent('RoombaLabel').setText(this.roomba.handle);
          }
 
@@ -185,7 +187,10 @@ define([
          }
 
          // Using 1/60 instead of dt because fixed-time calculations are more accurate
+         // var before = this.networkedRoombas[0].body.GetPosition().get_x();
          this.world.Step(1/60, 1, 1);
+         this.world.ClearForces();
+         // console.log(before, this.networkedRoombas[0].body.GetPosition().get_x());
 
          this.cameraMan.update(dt);
 

@@ -11,14 +11,15 @@ define([
    var material = new THREE.MeshBasicMaterial({map: texture, color: 0xffffff});
 
    // DEFINITION
-   var FlailPowerup = Powerup.extend({
+   var LancePowerup = Powerup.extend({
       material: material,
 
-      powerup: 'FLAIL',
+      powerup: 'LANCE',
 
       beginContact: function(other) {
          if (Powerup.prototype.beginContact.apply(this, arguments) && other.isPlayer) {
-            other.flail.activate()
+            other.lance.activate()
+            other.blade.deactivate();
          }
       },
 
@@ -30,5 +31,5 @@ define([
       },
    });
 
-   return FlailPowerup;
+   return LancePowerup;
 })

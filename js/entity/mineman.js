@@ -7,9 +7,13 @@ define([
    Roomba,
    Powerup
 ) {
+   var texture = new THREE.TextureLoader().load('textures/square-outline-textured.png');
+   var powerupMaterial = new THREE.MeshBasicMaterial({map: texture, color: 0xff0000});
 
    // DEFINITION
    var MineInstance = Powerup.extend({
+      material: powerupMaterial,
+
       constructor: function(world) {
          Powerup.apply(this, arguments);
          this.timeToArm = 100;

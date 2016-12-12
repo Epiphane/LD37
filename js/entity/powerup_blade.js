@@ -23,6 +23,7 @@ define([
       beginContact: function(other) {
          if (Powerup.prototype.beginContact.apply(this, arguments) && other.isPlayer) {
             other.blade.activate()
+            other.lance.deactivate()
          }
       },
 

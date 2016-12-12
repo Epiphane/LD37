@@ -103,6 +103,7 @@ define([
       }
 
       // HTML form submit intercept
+      window.roombaColor = 'FFFFFF'
       function submitHandle(evt) {
          evt.preventDefault();
 
@@ -321,6 +322,7 @@ define([
          broadcastDeath: broadcastDeath,
          broadcastDespawn: broadcastDespawn,
          initialRequestSpawnTimers: initialRequestSpawnTimers,
+         canSpawn: function() { return hasSyncedSpawns; },
          newRoombaCallback: function(callback) {
             newRoombaCallback = callback;
          },

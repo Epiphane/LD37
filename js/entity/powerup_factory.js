@@ -4,6 +4,7 @@ define([
    'entity/powerup_blade',
    'entity/powerup_flail',
    'entity/powerup_mines',
+   'entity/powerup_lance',
    'entity/mineman',
 ], function(
    Box2D,
@@ -11,6 +12,7 @@ define([
    SpinningBlade,
    FlailPowerup,
    Mines,
+   LancePowerup,
    MineInstance
 ) {
    var PowerupFactory = Juicy.Entity.extend({
@@ -37,7 +39,7 @@ define([
          } while (this.getPowerupAt(position));
 
          if (type === 'POWERUP')
-            type = chance.pickone(['FLAIL']);
+            type = chance.pickone(['LANCE', 'MINES', 'BLADE']);
 
          this.spawnPowerup(type, position);
       },
@@ -61,6 +63,9 @@ define([
          case 'FLAIL':
          console.log('FLAIL FAIL');
             var spawn = new FlailPowerup(this.world);
+            break;
+         case 'LANCE':
+            var spawn = new LancePowerup(this.world);
             break;
          case 'MINES':
             var spawn = new Mines(this.world);

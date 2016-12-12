@@ -5,6 +5,7 @@ define([
    'component/roomba_label',
    'entity/spinning_blade',
    'entity/flail',
+   'entity/lance',
    'entity/box2d_mesh',
    'network/setup'
 ], function(
@@ -14,6 +15,7 @@ define([
    RoombaLabel,
    SpinningBlade,
    Flail,
+   Lance,
    Box2DMesh,
    Network
 ) {
@@ -58,12 +60,19 @@ define([
          this.dead = false;
          this.room = room;
          this.score = 0;
-         this.mineCount = 3;
+         this.mineCount = 0;
          this.MINE_COOLDOWN_MAX = 200;
          this.mineCooldown = 3;
 
          this.add(this.blade = new SpinningBlade(this, world));
-         this.add(this.flail = new Flail(this, world));
+         // this.add(this.flail = new Flail(this, world));
+         this.add(this.lance = new Lance(this, world));
+
+      },
+
+      setColor: function(hex) {
+         this.material.color.setHex(parseInt(hex, 16));
+         this.getComponent('RoombaLabel').setColor(hex);
       },
 
       setPosition: function(x, y, z) {
@@ -75,7 +84,8 @@ define([
          this.blade.position.set(0, 0, 0);
 
          // Update the blade b2Body...
-         Box2DMesh.prototype.setPosition.apply(this.flail, arguments);
+         // Box2DMesh.prototype.setPosition.apply(this.flail, arguments);
+         Box2DMesh.prototype.setPosition.apply(this.lance, arguments);
       },
 
       beginContact: function(other) {
@@ -100,7 +110,8 @@ define([
          this.getComponent('Fallable').reset();
          this.getComponent('Killable').reset();
          this.blade.deactivate();
-         this.flail.deactivate();
+         this.lance.deactivate();
+         // this.flail.deactivate();
 
          var amountToLose = Math.min(5, window.scores[window.myHandle]);
          window.scores[window.myHandle] -= amountToLose;

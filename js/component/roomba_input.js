@@ -24,11 +24,23 @@ define([
             this.broadcastTick = 2;
             var posn = this.entity.body.GetPosition();
             var velc = this.entity.body.GetLinearVelocity();
+            // var f_posn = this.entity.flail.body.GetPosition();
+            // var f_velc = this.entity.flail.body.GetLinearVelocity();
             Network.broadcastRoombaState({
+               color: game.roomba.material.color.getHexString(),
                position: {x: posn.get_x(), y: posn.get_y()},
                velocity: {x: velc.get_x(), y: velc.get_y()},
                score: this.entity.score,
-               bladeEnabled: this.entity.blade.visible
+               bladeEnabled: this.entity.blade.visible,
+               // flail: {
+               //    enabled: this.entity.flail.visible,
+               //    position: {x: f_posn.get_x(), y: f_posn.get_y()},
+               //    velocity: {x: f_velc.get_x(), y: f_velc.get_y()}
+               // },
+               lance: {
+                  enabled: this.entity.lance.visible,
+                  angle: this.entity.lance.body.GetAngle()
+               }
             });
          }
       },

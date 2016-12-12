@@ -15,6 +15,8 @@ define([
       var idA = fixtureA.GetBody().GetUserData();
       var idB = fixtureB.GetBody().GetUserData();
 
+      // console.log(idA, idB);
+
       if (idA && idB) {
          beginContactCallback(contact, idA, idB);
       }

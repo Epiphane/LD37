@@ -10,7 +10,6 @@ define([
    loader.load( './fonts/droid_sans_bold.typeface.json', function ( response ) {
       font.resolve(response);
    });
-   var material = new THREE.MeshBasicMaterial({ color: 0x66ccff });
 
    return Juicy.Component.create('RoombaLabel', {
       constructor: function(entity) {
@@ -18,13 +17,18 @@ define([
 
          this.entity = entity;
          this.ready = false;
+         this.material = new THREE.MeshBasicMaterial({ color: 0x66ccff });
+      },
+
+      setColor: function(hex) {
+         this.material.color.setHex(parseInt(hex, 16));
       },
 
       setText: function(text) {
          var self = this;
          font.then(function(font) {
             if (self.text)
-               self.remove(self.text);
+               self.entity.remove(self.text);
             
             var textGeo = new THREE.TextGeometry(text.toUpperCase(), {
                font: font,
@@ -40,7 +44,7 @@ define([
             textGeo.computeBoundingBox();
             textGeo.computeVertexNormals();
 
-            self.text = new THREE.Mesh(textGeo, material);
+            self.text = new THREE.Mesh(textGeo, self.material);
             self.text.position.x = -0.75;
             self.text.position.y = 1;
             self.text.position.z = 0.5 * ( textGeo.boundingBox.max.x - textGeo.boundingBox.min.x )
