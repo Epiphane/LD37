@@ -45,6 +45,8 @@ define([
       constructor: function(width, height) {
          window.game = this;
 
+         Juicy.Sound.play('music');
+
          Juicy.State.apply(this, arguments);
 
          this.ready = ready;

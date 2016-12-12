@@ -10,12 +10,12 @@ define([
    OBJMesh
 ) {
    // TWEAK THESE
-   var lanceWidth = 4;
-   var lanceLength = 0.4;
+   var lanceWidth = 0.15;
+   var lanceLength = 2.0;
    var lanceHeight = 0.1;
 
    // THREE.JS
-   var lanceGeometry = new THREE.BoxGeometry(lanceWidth, lanceHeight, lanceLength);
+   var lanceGeometry = new THREE.BoxGeometry(lanceLength * 2, lanceHeight, lanceWidth * 2);
    var texture = new THREE.TextureLoader().load('textures/square-outline-textured.png');
    var lanceMaterial = new THREE.MeshBasicMaterial({map: texture, color: 0xffccff});
 
@@ -32,9 +32,9 @@ define([
       fixtureDef: Box2DHelper.createFixtureDef({
          shape: {
             type: 'box',
-            args: [lanceLength, lanceWidth / 2]
+            args: [lanceWidth / 2, lanceLength]
          },
-         // isSensor: true,
+         isSensor: true,
          density: 0.0
       }),
 
@@ -76,17 +76,8 @@ define([
 
          // Using Roomba itself would create a circular dependency
          if (other instanceof this.parent.__proto__.constructor) {
-            if (other.blade.visible) {
-               // var rando = new Box2D.b2Vec2(Math.random() * 20, Math.random * 20);
-               // this.body.ApplyForce(rando, this.body.GetWorldCenter());
-
-               // rando = new Box2D.b2Vec2(Math.random() * 20, Math.random * 20);
-               // other.body.ApplyForce(rando, other.body.GetWorldCenter());
-            }
-            else {
-               if (!other.networked) {
-                  other.weaponDeath();
-               }
+            if (!other.networked) {
+               other.weaponDeath();
             }
          }
       },
@@ -97,7 +88,8 @@ define([
       update: function(dt) {
          if (this.parent.isPlayer) {
             var vel = this.parent.body.GetLinearVelocity();
-            var angle = Math.atan2(vel.get_x(), vel.get_y());
+            var angle = -Math.atan2(vel.get_y(), vel.get_x()) - Math.PI / 2;
+            // console.log(Math.round(vel.get_x()), Math.round(vel.get_y()));
             this.body.SetTransform(this.body.GetPosition(), angle);
          }
          this.rotation.y = this.body.GetAngle();
