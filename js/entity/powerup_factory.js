@@ -39,12 +39,12 @@ define([
          } while (this.getPowerupAt(position));
 
          if (type === 'POWERUP')
-            type = chance.pickone(['LANCE', 'MINES', 'BLADE']);
+            type = chance.pickone(['LANCE', 'MINES', 'BLADE', 'FLAIL']);
 
          this.spawnPowerup(type, position);
       },
 
-      spawnPowerup: function(type, position, silent) {
+      spawnPowerup: function(type, position, silent, life) {
          var spawn;
 
          if (this.getPowerupAt(position)) {
@@ -71,7 +71,7 @@ define([
             var spawn = new Mines(this.world);
             break;
          case 'ACTUAL_MINE':
-            var spawn = new MineInstance(this.world);
+            var spawn = new MineInstance(this.world, life);
             break;
          default:
             console.log('Type ' + type + ' not recognized :O');
@@ -96,7 +96,8 @@ define([
          return this.children.map(function(powerup) {
             return {
                position: { x: powerup.position.x, z: powerup.position.z },
-               type: powerup.powerup
+               type: powerup.powerup,
+               life: powerup.life
             }
          });
       },

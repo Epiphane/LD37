@@ -23,7 +23,7 @@ $(document).ready(function() {
       var form = document.getElementById("html-sux");
       form.onsubmit = Network.submitHandleCallback;
       // Show name modal
-      if (false && location.href.indexOf('localhost') >= 0) {
+      if (location.href.indexOf('localhost') >= 0) {
          var online = jQuery('<button class="btn btn-primary" style="position:fixed;bottom:0;left:0">Go Online</button>');
          jQuery('body').append(online);
 

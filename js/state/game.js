@@ -120,7 +120,7 @@ define([
          this.scene.add(this.powerups);
          Network.updateSpawnCallback(function(data) {
             data.data.forEach(function(powerup) {
-               that.powerups.spawnPowerup(powerup.type, powerup.position, true);
+               that.powerups.spawnPowerup(powerup.type, powerup.position, true, powerup.life);
             })
          });
 

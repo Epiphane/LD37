@@ -33,7 +33,7 @@ define([
             type: 'circle',
             args: [flailRadius]
          },
-         // isSensor: true,
+         isSensor: true,
          density: 0.0
       }),
 
@@ -47,22 +47,24 @@ define([
          this.body.CreateFixture(this.fixtureDef);
          this.body.SetUserData(this.id);
 
-         var joint = new Box2D.b2DistanceJointDef();
+         var joint = new Box2D.b2WeldJointDef();
              joint.set_collideConnected(false);
              joint.set_bodyA(roomba.body);
              joint.set_bodyB(this.body);
-             joint.set_length(2);
+             // joint.set_length(2);
              joint.set_dampingRatio(1);
              joint.set_frequencyHz(4);
              joint.set_localAnchorA(new Box2D.b2Vec2(0.0, 0.0));//roomba.body.GetPosition());
-             joint.set_localAnchorB(new Box2D.b2Vec2(0.0, 0.0));//this.body.GetPosition());
+             joint.set_localAnchorB(new Box2D.b2Vec2(2.0, 0.0));//this.body.GetPosition());
 
          // joint.Initialize(entity.body, this.body, new Box2D.b2Vec2(0.0, 0.0));
          var jt = world.CreateJoint(joint);
+         window.joint = jt;
 
-         this.body.SetActive(false);
+         // this.body.SetActive(false);
 
-         this.speed = 2;
+         this.speed = 4;
+         this.angle = 0;
          // this.position.y -= 0.5;
       },
 
@@ -80,17 +82,8 @@ define([
 
          // Using Roomba itself would create a circular dependency
          if (other instanceof this.parent.__proto__.constructor) {
-            if (other.blade.visible) {
-               // var rando = new Box2D.b2Vec2(Math.random() * 20, Math.random * 20);
-               // this.body.ApplyForce(rando, this.body.GetWorldCenter());
-
-               // rando = new Box2D.b2Vec2(Math.random() * 20, Math.random * 20);
-               // other.body.ApplyForce(rando, other.body.GetWorldCenter());
-            }
-            else {
-               if (!other.networked) {
-                  other.weaponDeath();
-               }
+            if (!other.networked) {
+               other.weaponDeath();
             }
          }
       },
@@ -99,19 +92,15 @@ define([
       },
 
       update: function(dt) {
-         if (!!this.body.IsActive() !== !!this.visible) {
-            this.body.SetActive(!!this.visible && this.parent.isPlayer);
-            if (this.visible) {
-               this.body.SetTransform(this.roomba.body.GetPosition(), 0);
-            }
-         }
+         if (!this.visible)
+            return;
+
+         this.angle += this.speed * dt;
+         this.body.SetTransform(this.body.GetPosition(), this.angle);
 
          Box2DMesh.prototype.update.apply(this, arguments);
          this.position.x -= this.parent.position.x;
          this.position.z -= this.parent.position.z;
-
-         if (!this.visible)
-            return;
 
          // this.rotation.y += dt * 4 * this.speed;
       }

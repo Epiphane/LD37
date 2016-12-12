@@ -65,7 +65,7 @@ define([
          this.mineCooldown = 3;
 
          this.add(this.blade = new SpinningBlade(this, world));
-         // this.add(this.flail = new Flail(this, world));
+         this.add(this.flail = new Flail(this, world));
          this.add(this.lance = new Lance(this, world));
 
       },
@@ -84,7 +84,7 @@ define([
          this.blade.position.set(0, 0, 0);
 
          // Update the blade b2Body...
-         // Box2DMesh.prototype.setPosition.apply(this.flail, arguments);
+         Box2DMesh.prototype.setPosition.apply(this.flail, arguments);
          Box2DMesh.prototype.setPosition.apply(this.lance, arguments);
       },
 
@@ -111,7 +111,7 @@ define([
          this.getComponent('Killable').reset();
          this.blade.deactivate();
          this.lance.deactivate();
-         // this.flail.deactivate();
+         this.flail.deactivate();
 
          var amountToLose = Math.min(5, window.scores[window.myHandle]);
          window.scores[window.myHandle] -= amountToLose;
@@ -148,7 +148,7 @@ define([
          this.die('weapon', doNotBroadcast);
          this.getComponent('Killable').kill();
          Juicy.Sound.play(chance.pickone(['kill']));
-         console.trace();
+         this.flail.deactivate();
       },
 
       bodyDef: roombaBodyDef,

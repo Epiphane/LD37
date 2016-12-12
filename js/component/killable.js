@@ -5,6 +5,8 @@ define([], function() {
 
          this.entity = entity;
          this.killed = false;
+         this.originalColor = new THREE.Color(0x000000);
+         this.red = new THREE.Color(0xff0000)
          this.t = 0;
       },
 
@@ -14,7 +16,8 @@ define([], function() {
 
          this.killed = true;
          this.t = 0;
-         this.entity.material.color.set(0xff0000);
+         this.originalColor.copy(this.entity.material.color);
+         this.entity.material.color.copy(this.red);
       },
 
       reset: function() {
@@ -25,7 +28,7 @@ define([], function() {
          this.t = 0;
 
          this.entity.rotation.z = 0;
-         this.entity.material.color.set(0x66ccff);
+         this.entity.material.color.copy(this.originalColor);
       },
 
       update: function(dt, game) {

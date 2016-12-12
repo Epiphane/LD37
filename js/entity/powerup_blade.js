@@ -24,6 +24,7 @@ define([
          if (Powerup.prototype.beginContact.apply(this, arguments) && other.isPlayer) {
             other.blade.activate()
             other.lance.deactivate()
+            other.flail.deactivate()
          }
       },
 

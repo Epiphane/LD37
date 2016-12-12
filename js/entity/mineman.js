@@ -14,9 +14,10 @@ define([
    var MineInstance = Powerup.extend({
       material: powerupMaterial,
 
-      constructor: function(world) {
-         Powerup.apply(this, arguments);
+      constructor: function(world, life) {
+         Powerup.call(this, world);
          this.timeToArm = 100;
+         this.life = life || 10;
       },
 
       powerup: 'ACTUAL_MINE',
@@ -49,6 +50,12 @@ define([
 
       update: function(dt, game) {
          Powerup.prototype.update.apply(this, arguments);
+
+         this.life -= dt;
+         if (this.life < 0) {
+            this.shouldRemove = true;
+            this.onDespawn(this);
+         }
 
          this.rotation.z += dt;
          // Maybe blink red, later. But who cares??? not me.

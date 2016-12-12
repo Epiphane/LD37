@@ -18,12 +18,10 @@ define([
          this.entity.blade.visible = data.bladeEnabled;
          this.entity.setColor(data.color);
          if (data.flail) {
-            // this.entity.flail.visible = !!data.flail.enabled;
-            // this.entity.flail.body.SetTransform(new Box2D.b2Vec2(data.flail.position.x, data.flail.position.y), this.entity.flail.body.GetAngle());
-            // this.entity.flail.body.SetLinearVelocity(new Box2D.b2Vec2(data.flail.velocity.x, data.flail.velocity.y));
+            this.entity.flail.visible = !!data.flail.enabled;
+            this.entity.flail.angle = data.flail.angle;
+            // this.entity.flail.body.SetTransform(this.entity.flail.body.GetPosition(), data.flail.angle);
          }
-            // console.log(this.entity.body.GetPosition().get_x(), this.entity.body.GetPosition().get_y());
-            // console.log(this.entity.body.GetLinearVelocity().get_x(), this.entity.body.GetLinearVelocity().get_y());
          if (data.lance) {
             this.entity.lance.visible = !!data.lance.enabled;
             this.entity.lance.body.SetTransform(this.entity.lance.body.GetPosition(), data.lance.angle);

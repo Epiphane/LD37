@@ -170,7 +170,10 @@ define([
          new_connection.on('data', function(data) {
             switch(data.type) {
                case 'UPDATE_OBJECT':
-               networkSyncedEntities[data.name.toLowerCase()].networkUpdate(data);
+               if (networkSyncedEntities[data.name.toLowerCase()])
+                  networkSyncedEntities[data.name.toLowerCase()].networkUpdate(data);
+               else 
+                  console.warn('Couldnt find my buddy ' + data.name + '??');
                break;
                case 'DESPAWN':
                despawnCallback(data);
@@ -272,7 +275,8 @@ define([
                name: window.myHandle,
                data: [{
                   type: spawned.powerup,
-                  position: {x: spawned.position.x, z: spawned.position.z}
+                  position: {x: spawned.position.x, z: spawned.position.z},
+                  life: spawned.life
                }]
             });
          }
