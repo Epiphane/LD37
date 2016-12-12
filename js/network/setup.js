@@ -107,6 +107,7 @@ define([
          evt.preventDefault();
 
          window.myHandle = jQuery('form').serializeArray()[0]["value"];
+         window.roombaColor = jQuery('form').serializeArray()[1]["value"];
          window.scores[window.myHandle.toLowerCase()] = 0;
          updateHighScores();
 
@@ -119,7 +120,7 @@ define([
 
          // POST my new peer id
          jQuery.ajax({
-            url: API_URL + 'peer/id/' + myId + '/name/' + window.myHandle,
+            url: API_URL + 'peer/id/' + myId + '/name/' + window.myHandle + '/color/' + window.roombaColor,
             error: function(jqXHR, textStatus, errorThrown) {
                // un-unique handle :I
                console.warn("Oh no! Trouble telling the server about my new id " + JSON.stringify(textStatus));
