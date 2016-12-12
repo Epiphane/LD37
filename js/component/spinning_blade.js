@@ -9,7 +9,7 @@ define([
       constructor: function() {
          OBJMesh.apply(this, arguments);
 
-         this.load('art/', 'test_texture.mtl', 'test_texture.obj');
+         this.load('art/', 'test_texture.mtl', 'sawblade.obj');
          this.position.y -= 0.25;
       },
 

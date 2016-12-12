@@ -68,6 +68,8 @@ define([
          this.add(this.flail = new Flail(this, world));
          this.add(this.lance = new Lance(this, world));
 
+         this.blade.activate();
+
       },
 
       setColor: function(hex) {
@@ -140,7 +142,7 @@ define([
       fallDeath: function(doNotBroadcast) {
          this.die('fall', doNotBroadcast);
          this.getComponent('Fallable').fall();
-         if (this.isPlayer)   
+         if (this.isPlayer)
             Juicy.Sound.play(chance.pickone(['fall']));
       },
 
