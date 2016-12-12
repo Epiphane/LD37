@@ -3,11 +3,13 @@ define([
    'entity/powerup',
    'entity/powerup_blade',
    'entity/powerup_mines',
+   'entity/mineman',
 ], function(
    Box2D,
    Powerup,
    SpinningBlade,
-   Mines
+   Mines,
+   MineInstance
 ) {
    var PowerupFactory = Juicy.Entity.extend({
       constructor: function(world) {
@@ -57,8 +59,9 @@ define([
          case 'MINES':
             var spawn = new Mines(this.world);
             break;
-         // case 'ACTUAL_MINE':
-         //    var spawn = new MineInstance(this.world);
+         case 'ACTUAL_MINE':
+            var spawn = new MineInstance(this.world);
+            break;
          default:
             console.log('Type ' + type + ' not recognized :O');
             return;
