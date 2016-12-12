@@ -17,7 +17,7 @@ define([
       constructor: function(world, life) {
          Powerup.call(this, world);
          this.timeToArm = 100;
-         this.life = life || 10;
+         this.life = life || 60;
       },
 
       powerup: 'ACTUAL_MINE',
