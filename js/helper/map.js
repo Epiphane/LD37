@@ -2,12 +2,14 @@ define([
    'box2d',
    'helper/box2d',
    'helper/map_constants',
-   'entity/map/falling_tile'
+   'entity/map/falling_tile',
+   'entity/map/breakable_wall'
 ], function(
    Box2D,
    Box2DHelper,
    MapConstants,
-   FallingTile
+   FallingTile,
+   BreakableWall
 ) {
    var world = null;
 
@@ -35,6 +37,12 @@ define([
       MapConstants.tileBodyDef.set_position(new Box2D.b2Vec2(-z, x));
       tileObj.body = world.CreateBody(MapConstants.tileBodyDef);
       tileObj.body.CreateFixture(MapConstants.wallFixtureDef);
+
+      return tileObj;
+   };
+
+   MapHelper.createBreakableWall = function() {
+      var tileObj = new BreakableWall(world);
 
       return tileObj;
    };

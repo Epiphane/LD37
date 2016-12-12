@@ -82,13 +82,13 @@ define([
                      tileObj = MapHelper.createWall(x, z);
                      tileObj.position.set(x, 2, z);
                      break;
+                  case BREAKABLE:
+                     tileObj = MapHelper.createBreakableWall();
+                     tileObj.setPosition(x, 2, z);
+                     break;
                   case FALLING:
                      tileObj = MapHelper.createFallingFloor();
                      tileObj.setPosition(x, -0.5, z);
-                     break;
-                  case BREAKABLE:
-                     tileObj = MapHelper.createWall(x, z);
-                     tileObj.position.set(x, 2, z);
                      break;
                   default:
                      console.log('o my');
