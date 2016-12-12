@@ -27,7 +27,8 @@ define([
    // G
    var NOTHING = 0,
        COIN    = 64,
-       POWERUP = 128,
+       POWERUP = 12823984,
+       MINE    = 128,
        SPAWN   = 255;
 
    // BOX2D
@@ -207,11 +208,14 @@ define([
                      this.spawns.powerup.push([x, this.tiles.length - 1 - z]);
                      this.spawns.all.push([x, this.tiles.length - 1 - z, 'POWERUP']);
                      break;
+                  case MINE:
+                     this.spawns.powerup.push([x, this.tiles.length - 1 - z]);
+                     this.spawns.all.push([x, this.tiles.length - 1 - z, 'MINES']);
                   case SPAWN:
                      this.spawns.player.push([x, this.tiles.length - 1 - z]);
                      break;
                }
-   
+
                this.add(tileObj);
             }.bind(this));
          }.bind(this));
@@ -243,7 +247,7 @@ define([
          var z = Math.min(
                   Math.max(
                    Math.round(position.z)
-                  , 0), 
+                  , 0),
                  this.tiles.length - 1);
          var x = Math.min(
                   Math.max(

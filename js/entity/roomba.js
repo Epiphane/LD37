@@ -111,7 +111,7 @@ define([
 
       die: function(how) {
          if (this.dead) return;
-         
+
          this.dead = true;
          this.respawnTimer = 2;
          Network.broadcastDeath(how);
@@ -140,6 +140,16 @@ define([
 
             if (this.respawnTimer <= 0) {
                this.respawn();
+            }
+         }
+
+         if (this.mineCount > 5) {
+            this.mineCooldown --;
+            if (this.mineCooldown <= 0) {
+               this.mineCooldown = this.MINE_COOLDOWN_MAX;
+               this.mineCount --;
+               // drop a mine
+               console.log('ITS MINE TIME BABYYYY');
             }
          }
 
