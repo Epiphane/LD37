@@ -68,8 +68,6 @@ define([
          this.add(this.flail = new Flail(this, world));
          this.add(this.lance = new Lance(this, world));
 
-         this.blade.activate();
-
       },
 
       setColor: function(hex) {
