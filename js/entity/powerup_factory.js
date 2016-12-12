@@ -35,7 +35,7 @@ define([
          } while (this.getPowerupAt(position));
 
          if (type === 'POWERUP')
-            type = 'BLADE';
+            type = chance.pickone(['MINE', 'BLADE']);
 
          this.spawnPowerup(type, position);
       },

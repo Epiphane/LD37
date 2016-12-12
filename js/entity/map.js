@@ -14,8 +14,7 @@ define([
    // G
    var NOTHING = 0,
        COIN    = 64,
-       POWERUP = 12823984,
-       MINE    = 128,
+       POWERUP = 128,
        SPAWN   = 255;
 
    var Map = Juicy.Entity.extend({
@@ -108,9 +107,6 @@ define([
                      this.spawns.powerup.push([x, z]);
                      this.spawns.all.push([x, z, 'POWERUP']);
                      break;
-                  case MINE:
-                     this.spawns.powerup.push([x, this.tiles.length - 1 - z]);
-                     this.spawns.all.push([x, this.tiles.length - 1 - z, 'MINES']);
                   case SPAWN:
                      this.spawns.player.push([x, z]);
                      break;

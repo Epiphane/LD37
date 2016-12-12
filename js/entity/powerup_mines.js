@@ -23,7 +23,6 @@ define([
       beginContact: function(other) {
          if (Powerup.prototype.beginContact.apply(this, arguments) && other.isPlayer) {
             other.mineCount = 5;
-            other.MINE_COOLDOWN_MAX = 300;
             other.mineCooldown = 0;
          }
       },

@@ -53,6 +53,9 @@ define([
          this.dead = false;
          this.room = room;
          this.score = 0;
+         this.mineCount = 3;
+         this.MINE_COOLDOWN_MAX = 200;
+         this.mineCooldown = 3;
 
          this.add(this.blade = new SpinningBlade(world));
          var joint = new Box2D.b2WeldJointDef();
@@ -143,14 +146,14 @@ define([
             }
          }
 
-         if (this.mineCount > 5) {
+         if (this.mineCount > 0) {
             this.mineCooldown --;
             if (this.mineCooldown <= 0) {
                this.mineCooldown = this.MINE_COOLDOWN_MAX;
                this.mineCount --;
                // drop a mine
                console.log('ITS MINE TIME BABYYYY');
-               game.powerups.spawnPowerup('ACTUAL_MINE', this.position);
+               window.game.powerups.spawnPowerup('ACTUAL_MINE', this.position);
 
             }
          }
