@@ -14,10 +14,11 @@ define([
    var MineInstance = Powerup.extend({
       material: powerupMaterial,
 
-      constructor: function(world, life) {
+      constructor: function(world, life, owner) {
          Powerup.call(this, world);
          this.timeToArm = 100;
-         this.life = life || 60;
+         this.owner = owner;
+         this.life = life || 90;
       },
 
       powerup: 'ACTUAL_MINE',
@@ -29,7 +30,7 @@ define([
 
       beginContact: function(other) {
          // Only collide with Roombas, and wait for a bit before exploding
-         if (!other.isPlayer || this.timeToArm >= 0) {
+         if (!other.isPlayer || (this.timeToArm >= 0 && other === this.owner)) {
             return false;
          }
 
@@ -42,7 +43,7 @@ define([
          roombapos.op_sub(minepos);
          roombapos.op_mul(this.MINE_POWER);
          other.body.ApplyForce(roombapos, other.body.GetWorldCenter());
-            
+
          Juicy.Sound.play(chance.pickone(['mine']));
 
          return true;

@@ -77,7 +77,19 @@ define([
          // Using Roomba itself would create a circular dependency
          if (other instanceof this.parent.__proto__.constructor) {
             if (!other.networked) {
-               other.weaponDeath();
+               if (other.bladeEnabled) {
+                  var minepos = this.body.GetWorldCenter();
+                  var unsaferoombapos = other.body.GetWorldCenter();
+                  var roombapos = new Box2D.b2Vec2(unsaferoombapos.get_x(), unsaferoombapos.get_y());
+                  roombapos.op_sub(minepos);
+                  roombapos.op_mul(1000000);
+                  other.body.ApplyForce(roombapos, other.body.GetWorldCenter());
+
+                  Juicy.Sound.play(chance.pickone(['mine']));
+               }
+               else {
+                  other.weaponDeath();
+               }
             }
          }
       },
