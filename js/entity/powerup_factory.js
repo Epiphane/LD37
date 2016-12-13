@@ -27,6 +27,8 @@ define([
 
       spawn: function(room) {
          var spawns = room.spawns.all;
+         if (spawns.length === 0) return;
+
          var spawn, type, position;
          var tries = 5;
          do {
