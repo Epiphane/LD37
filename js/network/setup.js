@@ -355,7 +355,7 @@ define([
 setInterval(function() {
    if (window.ready_freddy) {
       jQuery.ajax({
-         url: window.API_URL + "heartbeat/" + window.myHandle,
+         url: window.API_URL + "peer/heartbeat/" + window.myHandle,
          success: function() {
             // good job we did it
          },
