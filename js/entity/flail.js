@@ -83,7 +83,7 @@ define([
          // Using Roomba itself would create a circular dependency
          if (other instanceof this.parent.__proto__.constructor) {
             if (!other.networked) {
-               if (other.bladeEnabled) {
+               if (other.blade.visible) {
                   var minepos = this.body.GetWorldCenter();
                   var unsaferoombapos = other.body.GetWorldCenter();
                   var roombapos = new Box2D.b2Vec2(unsaferoombapos.get_x(), unsaferoombapos.get_y());
