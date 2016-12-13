@@ -46,7 +46,7 @@ define([
          this.spawnPowerup(type, position);
       },
 
-      spawnPowerup: function(type, position, silent, life) {
+      spawnPowerup: function(type, position, silent, life, spawner) {
          var spawn;
 
          if (this.getPowerupAt(position)) {
@@ -70,7 +70,7 @@ define([
             var spawn = new Mines(this.world);
             break;
          case 'ACTUAL_MINE':
-            var spawn = new MineInstance(this.world, life, silent === window.game.roomba);
+            var spawn = new MineInstance(this.world, life, spawner === window.game.roomba);
             break;
          default:
             console.log('Type ' + type + ' not recognized :O');

@@ -187,7 +187,7 @@ define([
                this.mineCount --;
                // drop a mine
                console.log('ITS MINE TIME BABYYYY');
-               window.game.powerups.spawnPowerup('ACTUAL_MINE', this.position, this);
+               window.game.powerups.spawnPowerup('ACTUAL_MINE', this.position, false, 90, this);
             }
          }
 
