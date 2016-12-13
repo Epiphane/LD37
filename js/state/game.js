@@ -143,12 +143,12 @@ define([
          });
       },
 
-      onSpawn: function(coin) {
-         Network.broadcastSpawn(coin);
+      onSpawn: function(thing) {
+         Network.broadcastSpawn(thing);
       },
 
-      onDespawn: function(coin) {
-         Network.broadcastDespawn(coin);
+      onDespawn: function(thing) {
+         Network.broadcastDespawn(thing);
       },
 
       updateCoinSpawns: function(data) {

@@ -14,10 +14,14 @@ define([
    var MineInstance = Powerup.extend({
       material: powerupMaterial,
 
-      constructor: function(world, life, owner) {
+      constructor: function(world, life, delayArming) {
          Powerup.call(this, world);
-         this.timeToArm = 100;
-         this.owner = owner;
+         if (delayArming) {
+            this.timeToArm = 100;
+         }
+         else {
+            this.timeToArm = 0;
+         }
          this.life = life || 90;
       },
 
@@ -30,7 +34,7 @@ define([
 
       beginContact: function(other) {
          // Only collide with Roombas, and wait for a bit before exploding
-         if (!other.isPlayer || (this.timeToArm >= 0 && other === this.owner)) {
+         if (!other.isPlayer || this.timeToArm >= 0) {
             return false;
          }
 
