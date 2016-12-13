@@ -10,14 +10,14 @@ define([
    OBJMesh
 ) {
    // TWEAK THESE
-   var lanceWidth = 0.15;
+   var lanceWidth = 0.5;
    var lanceLength = 2.0;
    var lanceHeight = 0.1;
 
    // THREE.JS
    var lanceGeometry = new THREE.BoxGeometry(lanceLength * 2, lanceHeight, lanceWidth * 2);
-   var texture = new THREE.TextureLoader().load('textures/square-outline-textured.png');
-   var lanceMaterial = new THREE.MeshBasicMaterial({map: texture, color: 0xffccff});
+   var texture = new THREE.TextureLoader().load('textures/lance.png');
+   var lanceMaterial = new THREE.MeshBasicMaterial({map: texture, color: 0xffffff, transparent: true});
 
    return Box2DMesh.extend({
       material: lanceMaterial,
