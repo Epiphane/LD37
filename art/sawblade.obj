@@ -1,5 +1,6 @@
 # This file uses centimeters as units for non-parametric coordinates.
 
+mtllib test_texture.mtl
 v 0.951057 -0.248483 -0.309017
 v 0.809018 -0.248483 -0.587786
 v 0.587786 -0.248483 -0.809017

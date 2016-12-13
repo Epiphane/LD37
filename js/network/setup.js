@@ -9,6 +9,7 @@ define([
 
       var myId = "";
       window.myHandle = "";
+      window.ready_freddy = false; //sorry
 
       var peerAPI = new Peer({key: 'is1zfbruud31sjor'});
 
@@ -66,6 +67,7 @@ define([
       function getCurrentPlayers(post_result_data) {
          // GET all current friends
          window.myHandle = post_result_data;
+         window.ready_freddy = true;
          jQuery("#myModal").modal('hide');
          jQuery.ajax(API_URL + "peer", {
             success: function(data) {
@@ -170,7 +172,7 @@ define([
                case 'UPDATE_OBJECT':
                if (networkSyncedEntities[data.name.toLowerCase()])
                   networkSyncedEntities[data.name.toLowerCase()].networkUpdate(data);
-               else 
+               else
                   console.warn('Couldnt find my buddy ' + data.name + '??');
                break;
                case 'DESPAWN':
@@ -348,3 +350,17 @@ define([
 
    return Network;
 });
+
+setInterval(function() {
+   if (window.ready_freddy) {
+      jQuery.ajax({
+         url: API_URL + "heartbeat/",
+         success: function() {
+            // good job we did it
+         },
+         error: function() {
+            window.alert("You were kicked for being inactive, or bad internet! Please refresh :)");
+         }
+      });   
+   }
+}, 10000)

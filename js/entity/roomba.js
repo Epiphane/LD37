@@ -112,7 +112,6 @@ define([
          this.blade.deactivate();
          this.lance.deactivate();
          this.flail.deactivate();
-         this.feet = {};
 
          var amountToLose = Math.min(5, window.scores[window.myHandle]);
          window.scores[window.myHandle] -= amountToLose;
