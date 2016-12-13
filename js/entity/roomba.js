@@ -30,7 +30,7 @@ define([
    var texture = new THREE.TextureLoader().load('textures/roomba.png', function() {
       ready();
    });
-   var roombaMaterial = new THREE.MeshBasicMaterial({map: texture, color: 0x66ccff});
+   var roombaMaterial = new THREE.MeshBasicMaterial({map: texture, color: 0xffffff});
 
    window.faces = ['roomba', 'roomba1', 'roomba2'];
    var textures = faces.map(function(name) {
@@ -58,7 +58,7 @@ define([
 
          Box2DMesh.call(this, components, world);
 
-         this.position.y += roombaHeight / 2;
+         this.position.y += 0.1;
 
          this.feet = {};
          this.respawnTimer = 0;
@@ -74,11 +74,12 @@ define([
          this.add(this.lance = new Lance(this, world));
 
          this.face = 0;
-
+         this.material.map = textures[this.face];
       },
 
       setColor: function(hex) {
-         this.material.color.setHex(parseInt(hex, 16));
+         // this.material.color.setHex(parseInt(hex, 16));
+         // this.material.color.multiplyScalar(3);
          this.getComponent('RoombaLabel').setColor(hex);
       },
 

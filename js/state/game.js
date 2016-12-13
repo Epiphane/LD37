@@ -197,7 +197,7 @@ define([
 
          // Using 1/60 instead of dt because fixed-time calculations are more accurate
          // var before = this.networkedRoombas[0].body.GetPosition().get_x();
-         this.world.Step(1/60, 1, 1);
+         this.world.Step(dt, 1, 1);
          this.world.ClearForces();
          // console.log(before, this.networkedRoombas[0].body.GetPosition().get_x());
 

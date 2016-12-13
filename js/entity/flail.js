@@ -11,12 +11,12 @@ define([
 ) {
    // TWEAK THESE
    var flailRadius = 0.6;
-   var flailHeight = 0.5;
+   var flailHeight = 0.1;
 
    // THREE.JS
    var flailGeometry = new THREE.CylinderGeometry(flailRadius, flailRadius, flailHeight, 32);
-   var texture = new THREE.TextureLoader().load('textures/square-outline-textured.png');
-   var flailMaterial = new THREE.MeshBasicMaterial({map: texture, color: 0xffccff});
+   var texture = new THREE.TextureLoader().load('textures/flail.png');
+   var flailMaterial = new THREE.MeshBasicMaterial({map: texture, color: 0xffffff, transparent: true});
 
    return Box2DMesh.extend({
       material: flailMaterial,
