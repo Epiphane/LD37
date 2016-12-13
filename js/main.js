@@ -20,6 +20,14 @@ $(document).ready(function() {
       window.GAME_WIDTH = 800,
       window.GAME_HEIGHT = 694;
 
+      window.faces.forEach(function(face, id) {
+         var label = jQuery('<label class="form-check-inline">' +
+            '<input name="face" ' + (id === 0 ? 'checked ' : '') + 'class="form-check-input" type="radio" value="' + id + '"> <img src="textures/' + face + '.png" />' +
+         '</label>');
+         jQuery('#bottomOfFace').before(label);
+         console.log(face);
+      });
+
       var form = document.getElementById("html-sux");
       form.onsubmit = Network.submitHandleCallback;
       // Show name modal
@@ -39,7 +47,7 @@ $(document).ready(function() {
          }
 
          jQuery('#fart').val(randomStr);
-         // jQuery("#myModal").modal('show');
+         jQuery("#myModal").modal('show');
          // jQuery('form').submit();
       }
       else {

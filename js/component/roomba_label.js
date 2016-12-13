@@ -46,7 +46,7 @@ define([
 
             self.text = new THREE.Mesh(textGeo, self.material);
             self.text.position.x = -0.75;
-            self.text.position.y = 1;
+            self.text.position.y = 0;
             self.text.position.z = 0.5 * ( textGeo.boundingBox.max.x - textGeo.boundingBox.min.x )
             self.text.rotation.x = -Math.PI / 2;
             self.text.rotation.z = Math.PI / 2;

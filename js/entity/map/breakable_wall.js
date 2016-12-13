@@ -13,6 +13,8 @@ define([
 
       constructor: function() {
          Juicy.Components.Mesh.call(this, this.geometry, this.material);
+
+         this.position.y = 10;
       }
    });
 
@@ -31,6 +33,8 @@ define([
    var healthComponents = [BrokenComponent, OneHitComponent, FullHealthComponent];
 
    var BreakingWall = Box2DMesh.extend({
+      material: MapConstants.pitMaterial,
+      geometry: MapConstants.tileGeometry,
       bodyDef: MapConstants.tileBodyDef,
       fixtureDef: MapConstants.wallFixtureDef,
 
@@ -73,7 +77,7 @@ define([
             this.hitCooldown -= dt;
          }
 
-         this.position.y = this.health * 2.5 / (healthComponents.length - 1) - 0.5;
+         this.position.y = -10 + this.health * 2.5 / (healthComponents.length - 1) - 0.5;
 
          if (this.respawn) {
             this.respawn -= dt;

@@ -51,7 +51,7 @@ define([
 
          this.ready = ready;
 
-         this.perspective(38);
+         this.perspective(70);
          this.lookAt(new THREE.Vector3(0, 5, 0), new THREE.Vector3(0, 0, 0));
 
          // Lighting for OBJ files
@@ -90,7 +90,7 @@ define([
          this.scene.add(this.roomba);
 
          // Camera magic
-         this.cameraMan.follow(this.roomba, new THREE.Vector3(0, 20, 0));
+         this.cameraMan.follow(this.roomba, new THREE.Vector3(0, 12, 0));
          this.angle = Math.PI / 2;
 
          var that = this;
@@ -181,6 +181,10 @@ define([
             this.roomba.handle = window.myHandle;
             this.roomba.setColor(window.roombaColor);
             this.roomba.getComponent('RoombaLabel').setText(this.roomba.handle);
+         }
+
+         if (typeof(window.roombaFace) === 'number' && this.roomba.face !== window.roombaFace) {
+            this.roomba.setFace(window.roombaFace);
          }
 
          if (this.canSpawn) {

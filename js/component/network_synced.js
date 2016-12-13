@@ -16,7 +16,10 @@ define([
          this.entity.body.SetTransform(new Box2D.b2Vec2(data.position.x, data.position.y), this.entity.body.GetAngle());
          this.entity.body.SetLinearVelocity(new Box2D.b2Vec2(data.velocity.x, data.velocity.y));
          this.entity.blade.visible = data.bladeEnabled;
-         this.entity.setColor(data.color);
+         if (data.hasOwnProperty('face') && this.entity.face !== data.face)
+            this.entity.setFace(data.face);
+         if (data.hasOwnProperty('color') && !this.entity.material.color.equals(data.color))
+            this.entity.setColor(data.color);
          if (data.flail) {
             this.entity.flail.visible = !!data.flail.enabled;
             this.entity.flail.angle = data.flail.angle;
