@@ -126,7 +126,8 @@ define([
          this.flail.deactivate();
 
          var amountToLose = Math.min(5, window.scores[window.myHandle]);
-         window.scores[window.myHandle] -= amountToLose;
+         if (this.isPlayer)
+            window.scores[window.myHandle] -= amountToLose;
          updateHighScores();
 
          if (!this.room) {
