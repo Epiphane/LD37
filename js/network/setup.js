@@ -4,8 +4,8 @@ define([
    Roomba
 ) {
    var Network = (function() {
-      var API_URL = "https://elliot-commitment.herokuapp.com/"
-      // var API_URL = "http://localhost:3000/";
+      window.API_URL = "https://elliot-commitment.herokuapp.com/"
+      // window.API_URL = "http://localhost:3000/";
 
       var myId = "";
       window.myHandle = "";
@@ -355,13 +355,13 @@ define([
 setInterval(function() {
    if (window.ready_freddy) {
       jQuery.ajax({
-         url: API_URL + "heartbeat/",
+         url: window.API_URL + "heartbeat/",
          success: function() {
             // good job we did it
          },
          error: function() {
             window.alert("You were kicked for being inactive, or bad internet! Please refresh :)");
          }
-      });   
+      });
    }
 }, 10000)
