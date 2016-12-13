@@ -107,6 +107,7 @@ define([
 
          window.myHandle = jQuery('form').serializeArray()[0]["value"];
          window.roombaColor = jQuery('form').serializeArray()[1]["value"];
+         window.roombaFace = parseInt(jQuery('input[name="face"]:checked').val());
          window.scores[window.myHandle.toLowerCase()] = 0;
          updateHighScores();
 

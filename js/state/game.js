@@ -183,6 +183,10 @@ define([
             this.roomba.getComponent('RoombaLabel').setText(this.roomba.handle);
          }
 
+         if (typeof(window.roombaFace) === 'number' && this.roomba.face !== window.roombaFace) {
+            this.roomba.setFace(window.roombaFace);
+         }
+
          if (this.canSpawn) {
             this.spawnDelay -= dt;
             if (this.spawnDelay <= 0) {

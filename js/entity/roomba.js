@@ -27,10 +27,15 @@ define([
 
    // THREE.JS
    var roombaGeometry = new THREE.CylinderGeometry(roombaRadius, roombaRadius, roombaHeight, 32);
-   var texture = new THREE.TextureLoader().load('textures/square-outline-textured.png', function() {
+   var texture = new THREE.TextureLoader().load('textures/roomba.png', function() {
       ready();
    });
    var roombaMaterial = new THREE.MeshBasicMaterial({map: texture, color: 0x66ccff});
+
+   window.faces = ['roomba', 'roomba1', 'roomba2'];
+   var textures = faces.map(function(name) {
+      return new THREE.TextureLoader().load('textures/' + name + '.png');
+   });
 
    // BOX2D
    var roombaBodyDef = new Box2D.b2BodyDef();
@@ -68,11 +73,17 @@ define([
          this.add(this.flail = new Flail(this, world));
          this.add(this.lance = new Lance(this, world));
 
+         this.face = 0;
+
       },
 
       setColor: function(hex) {
          this.material.color.setHex(parseInt(hex, 16));
          this.getComponent('RoombaLabel').setColor(hex);
+      },
+
+      setFace: function(index) {
+         this.material.map = textures[this.face = index];
       },
 
       setPosition: function(x, y, z) {
@@ -214,6 +225,8 @@ define([
       else
          onReady.push(cb);
    };
+
+   // roombaGeometry.faceVertexUvs[0] = [];
 
    return Roomba;
 })

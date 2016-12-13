@@ -27,6 +27,7 @@ define([
             var f_posn = this.entity.flail.body.GetPosition();
             var f_velc = this.entity.flail.body.GetLinearVelocity();
             Network.broadcastRoombaState({
+               face: this.entity.face,
                color: this.entity.material.color.getHexString(),
                position: {x: posn.get_x(), y: posn.get_y()},
                velocity: {x: velc.get_x(), y: velc.get_y()},
