@@ -352,6 +352,7 @@ define([
    return Network;
 });
 
+window.dontbeannoying = false;
 setInterval(function() {
    if (window.ready_freddy) {
       jQuery.ajax({
@@ -360,7 +361,10 @@ setInterval(function() {
             // good job we did it
          },
          error: function() {
-            window.alert("You were kicked for being inactive, or bad internet! Please refresh :)");
+            if (!window.dontbeannoying)
+               window.alert("You were kicked for being inactive, or bad internet! Please refresh :)");
+               
+            window.dontbeannoying = true;
          }
       });
    }
