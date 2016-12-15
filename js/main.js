@@ -72,6 +72,7 @@ $(document).ready(function() {
       Juicy.Sound.load('saw', './audio/saw.mp3', false, 4, 0.8);
       Juicy.Sound.load('item', './audio/item.mp3', false, 4, 0.8);
       Juicy.Sound.load('kill', './audio/kill.mp3', false, 4, 0.9);
+      // Juicy.Sound.load('hit', './audio/hit.mp3', false, 4, 0.7);
 
       window.toggleMute = function(type) {
          var muted = Juicy.toggleMute(type);
