@@ -101,11 +101,21 @@ function updateHighScores() {
 
    var scoresSorted = [];
    for (var handle in window.scores) {
+      if (handle === "" || isNaN(window.scores[handle])) {
+         continue;
+      }
       scoresSorted.push({name: handle, score: window.scores[handle]});
    }
    scoresSorted.sort(function(a, b) {
       return b.score - a.score;
    });
+
+   if (scoresSorted.length <= 1) {
+      jQuery("#alone").show(0);
+   }
+   else {
+      jQuery("#alone").hide(0);
+   }
 
    for (var i = 1; i <= 10; i++) {
       if (i <= scoresSorted.length) {
@@ -118,6 +128,8 @@ function updateHighScores() {
       }
    }
 }
+
+setInterval(updateHighScores, 10000);
 
 // Prevent arrow keys from scrolling
 window.addEventListener("keydown", function(e) {
