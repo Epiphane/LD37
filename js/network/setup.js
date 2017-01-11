@@ -4,7 +4,7 @@ define([
    Roomba
 ) {
    var Network = (function() {
-      window.API_URL = "https://elliot-commitment.herokuapp.com/"
+      window.API_URL = "https://polycommit.herokuapp.com/"
       // window.API_URL = "http://localhost:3000/";
 
       var myId = "";
@@ -363,7 +363,7 @@ setInterval(function() {
          error: function() {
             if (!window.dontbeannoying)
                window.alert("You were kicked for being inactive, or bad internet! Please refresh :)");
-               
+
             window.dontbeannoying = true;
          }
       });
